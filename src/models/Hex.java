@@ -31,11 +31,11 @@ public class Hex {
 
         hex.getPoints().setAll(
                 x, y,
-                x + side, y,
-                x + side + h, y + r,
-                x + side, y + r + r,
-                x, y + r + r,
-                x - h, y + r);
+                x + r, y + h,
+                x + r, y + side + h,
+                x, y + side + h + h,
+                x - r, y + side + h,
+                x - r, y + h);
 
     }
 
