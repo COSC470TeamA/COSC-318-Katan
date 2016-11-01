@@ -10,6 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        // Launch the first client activity.
         Parent root = FXMLLoader.load(getClass().getResource("../views/MainMenu.fxml"));
         primaryStage.setTitle("Katan");
         primaryStage.setScene(new Scene(root, 300, 275));
