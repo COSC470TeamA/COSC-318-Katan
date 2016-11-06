@@ -3,3 +3,6 @@
 Button {
     -fx-background-color: darkgrey;
 }
+#boardPane {
+    -fx-border-color: black;
+}

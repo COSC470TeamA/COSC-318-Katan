@@ -3,19 +3,26 @@ package models;
 /**
  * Created by haunter on 31/10/16.
  */
-public class HexagonCoordinate {
+public class Coordinate {
     /** The x coordinate of a hexagon in a grid. */
-    public int x;
+    public double x;
     /** The y coordinate of a hexagon in a grid. */
-    public int y;
+    public double y;
+
+    /** Defines how close a mouse pointer needs to be to trigger selection of a vertex */
+    public double CLOSE = 10;
 
 
-    public HexagonCoordinate(int x, int y) {
+    public Coordinate(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public boolean isCloseTo(Coordinate b) {
+        return Math.abs(this.getX() - b.getX()) < CLOSE && Math.abs(this.getY() - b.getY()) < CLOSE;
+    }
+
+    public double getX() {
         return x;
     }
 
@@ -23,7 +30,7 @@ public class HexagonCoordinate {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 

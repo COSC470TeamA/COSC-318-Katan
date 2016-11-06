@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.Double?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Polygon?>
 
-<AnchorPane prefHeight="573.0" prefWidth="657.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GameController">
+<AnchorPane prefHeight="573.0" prefWidth="657.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GameController">
    <children>
       <VBox prefHeight="573.0" prefWidth="657.0">
          <children>
@@ -16,20 +16,34 @@
                   <Label text="Katan" textAlignment="CENTER" />
                </children>
             </Pane>
-            <Pane prefHeight="377.0" prefWidth="657.0">
+            <Pane fx:id="boardPane" prefHeight="424.0" prefWidth="657.0">
                <children>
-                  <Polygon fx:id="test" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE">
-                    <points>
-                      <Double fx:value="-50.0" />
-                      <Double fx:value="40.0" />
-                      <Double fx:value="50.0" />
-                      <Double fx:value="40.0" />
-                      <Double fx:value="0.0" />
-                      <Double fx:value="-60.0" />
-                    </points>
-                  </Polygon>
+                   <Polygon fx:id="FXHex01" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex02" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex03" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+
+                   <Polygon fx:id="FXHex10" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex11" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex12" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex13" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+
+                   <Polygon fx:id="FXHex20" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex21" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex22" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex23" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex24" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+
+                   <Polygon fx:id="FXHex30" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex31" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex32" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex33" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+
+                   <Polygon fx:id="FXHex41" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex42" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex43" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fx:id="selectionCircle" fill="#d9edff" layoutX="207.0" layoutY="141.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
                </children></Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" />
+            <Pane prefHeight="66.0" prefWidth="657.0" />
          </children></VBox>
    </children>
 </AnchorPane>

@@ -55,6 +55,7 @@ public class MainMenuController implements Initializable {
             gameStage.setResizable(false);
             gameStage.setScene(gameScene);
 
+            gameStage.setResizable(true);
             gameStage.show();
 
         } catch (IOException e) {
