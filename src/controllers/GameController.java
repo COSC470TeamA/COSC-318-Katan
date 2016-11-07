@@ -61,33 +61,11 @@ public class GameController implements Initializable {
         createTiles();
         ImagePattern lumberImagePattern = new ImagePattern(new Image("/assets/images/lumber.jpeg"));
         ImagePattern grainImagePattern = new ImagePattern(new Image("/assets/images/grain.jpg"));
+        ImagePattern oreImagePattern = new ImagePattern(new Image("/assets/images/ore.jpg"));
+        ImagePattern woolImagePattern = new ImagePattern(new Image("/assets/images/wool.png"));
+        ImagePattern brickImagePattern = new ImagePattern(new Image("/assets/images/brick.jpeg"));
+        ImagePattern desertImagePattern = new ImagePattern(new Image("/assets/images/desert.jpeg"));
 
-
-
-        //TileStack tileStack = new TileStack();
-//        allHexagons.forEach((hex) -> {
-//            Resource next = tileStack.next();
-//            switch (next) {
-//                case LUMBER:
-//                    hex.setFill(lumberImagePattern);
-//                    break;
-//                case WOOL:
-//
-//                    break;
-//                case GRAIN:
-//                    hex.setFill(grainImagePattern);
-//                    break;
-//                case ORE:
-//
-//                    break;
-//                case BRICK:
-//
-//                    break;
-//                case DESERT:
-//
-//                    break;
-//            }
-//        });
         allTiles.forEach((tile) -> {
             Resource thisResource = tile.getResource();
             switch (thisResource) {
@@ -95,19 +73,19 @@ public class GameController implements Initializable {
                     tile.getHex().setFill(lumberImagePattern);
                     break;
                 case WOOL:
-
+                    tile.getHex().setFill(woolImagePattern);
                     break;
                 case GRAIN:
                     tile.getHex().setFill(grainImagePattern);
                     break;
                 case ORE:
-
+                    tile.getHex().setFill(oreImagePattern);
                     break;
                 case BRICK:
-
+                    tile.getHex().setFill(brickImagePattern);
                     break;
                 case DESERT:
-
+                    tile.getHex().setFill(desertImagePattern);
                     break;
             }
         });
