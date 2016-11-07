@@ -1,25 +1,17 @@
 package controllers;
 
-import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
-import javafx.stage.*;
 import models.Coordinate;
 import models.Hex;
 import models.HexagonCoordinate;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -44,10 +36,25 @@ public class GameController implements Initializable {
     /** A list for all the tiles (hexagon shapes) on the board */
     ArrayList<Polygon> allTiles = new ArrayList<>(19);
 
+    /** Object with tools for calculating and mutating hexagon points */
+    Hex hex = new Hex();
+
+    /** The starting position of the hexes, relative to the upper left of their container */
+    double BOARD_PADDING_X, BOARD_PADDING_Y = 10;
+
+    /** The inital size of all edges of all tiles */
+    double SIDE_LENGTH = 50;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        drawHexGrid();
+        // Set the length of every side of the hex tiles (ie, set the board size)
+        hex.setSideLength(SIDE_LENGTH);
+        // Calculate the horizontal center of the board's container, offset for the board itself
+        BOARD_PADDING_X = boardPane.getPrefWidth() / 2 - 4 * hex.getR();
+
+
+
         selectionCircle.setVisible(false);
         selectionCircle.setRadius(10);
         boardPane.getChildren().forEach((hex) -> {
@@ -56,12 +63,18 @@ public class GameController implements Initializable {
         });
 
         allTiles.forEach((hex) -> {
+            hex.setLayoutY(BOARD_PADDING_Y);
+            hex.setLayoutX(BOARD_PADDING_X);
             hex.setOnMouseClicked((event) -> handleTileClick(event));
             hex.setOnMouseEntered((event) -> handleMouseEnter(event));
             hex.setOnMouseExited((event) -> handleMouseExit(event));
             hex.setOnMouseMoved((event) -> handleMouseMove(event));
         });
+        selectionCircle.setLayoutX(BOARD_PADDING_X);
+        selectionCircle.setLayoutY(BOARD_PADDING_Y);
         selectionCircle.setOnMouseExited((event) -> handleSelectionCircleMouseExit(event));
+
+        drawHexGrid();
 
     }
 
@@ -89,7 +102,7 @@ public class GameController implements Initializable {
         Coordinate currMouseCoord = new Coordinate(event.getX(), event.getY());
         for (Coordinate vertex : tileVertices) {
             if (currMouseCoord.isCloseTo(vertex)) {
-                selectionCircle.setCenterX(vertex.getX() - Hex.getSideLength());
+                selectionCircle.setCenterX(vertex.getX());
                 selectionCircle.setCenterY(vertex.getY());
                 selectionCircle.setVisible(true);
             }
@@ -116,7 +129,7 @@ public class GameController implements Initializable {
 
     public void drawHexGrid() {
 
-        Hex hex = new Hex();
+
         // Top row
         hex.calculateVertices(FXHex01, new HexagonCoordinate(0, 1));
         hex.calculateVertices(FXHex02, new HexagonCoordinate(0, 2));

@@ -9,8 +9,10 @@ import static java.lang.Thread.sleep;
  */
 public class Hex {
 
+
+
     /** The length of one side of any hexagon */
-    public static double side = 35d;
+    public double side;
 
     /** The height of a triangle with edges r and s at 30 degrees */
     private double h = calculateH(side);
@@ -25,6 +27,22 @@ public class Hex {
     /** X distance from the upper left vertex of a hex to one to the right */
     private double DISTANCE_HORIZONTAL = 2 * r;
 
+    /**
+     * Set the length of every hexagon that will be drawn.
+     * Because the length is non variable, the h, r, and
+     * distances between each hex can be determined as well.
+     *
+     * This method must be called before using this class!
+     *
+     * @param side The length in pixels of all sides of a hex.
+     */
+    public void setSideLength(double side) {
+        this.side = side;
+        h = calculateH(side);
+        r = calculateR(side);
+        DISTANCE_VERTICAL = h + side;
+        DISTANCE_HORIZONTAL = 2 * r;
+    }
 
     /**
      * Sets the points of a Polygon to be the coordinates of vertices of a hexagon.
@@ -44,6 +62,13 @@ public class Hex {
                 x - r, y + h);
     }
 
+    /**
+     * Determines the physical coordinates of a hexagon from the logical coordinates.
+     *
+     * @param hex The polygon to have its vertices mutated.
+     * @param coords The logical coordinates of a tile.
+     *               Coords must be in the format (row, col)
+     */
     public void calculateVertices(Polygon hex, HexagonCoordinate coords) {
 
         int row = coords.getX();
@@ -55,7 +80,7 @@ public class Hex {
 
 
     }
-    public static double getSideLength() { return side; }
+    public double getSideLength() { return side; }
 
     public static double calculateH(double side) {
         return (Math.sin(DegreesToRadians(30)) * side);
@@ -68,4 +93,8 @@ public class Hex {
     public static double DegreesToRadians(double degrees) {
         return degrees * Math.PI / 180;
     }
+    public double getR() { return r; }
+
+
+
 }
