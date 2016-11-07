@@ -12,6 +12,12 @@ public class TileStack {
     /** The stack of tiles */
     ArrayList<Resource> stack = new ArrayList<>(19);
 
+    /** Creates a stack of game tiles.
+     *
+     * A tile stack will be a random arrangement with
+     * 4 * Lumber, 4 * Wool, 4 * Grain,
+     * 3 * Brick, 3 * Ore, 1 * Desert.
+     */
     public TileStack() {
         for (int i = 0; i < 4; i++) {
             stack.add(Resource.LUMBER);

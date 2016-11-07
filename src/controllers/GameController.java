@@ -136,7 +136,7 @@ public class GameController implements Initializable {
 
     /**
      * Invoked on mouse move in a game tile.
-     * @param event
+     * @param event The Mouse Event which invoked this listener.
      */
     public void handleMouseMove(MouseEvent event) {
         Polygon thisTile = (Polygon) event.getSource();
@@ -157,21 +157,38 @@ public class GameController implements Initializable {
     }
 
     /**
-     * Invoke on mouse enter of a game tile.
-     * @param event
+     * Invoked on mouse enter of a game tile.
+     * @param event The Mouse Event which invoked this listener.
      */
     public void handleMouseEnter(MouseEvent event) {
         Polygon thisTile = (Polygon) event.getSource();
         selectionCircle.setVisible(false);
     }
+
+    /**
+     * Invoked on mouse exit of a game tile.
+     * @param event The Mouse Event which invoked this listener.
+     */
     public void handleMouseExit(MouseEvent event) {
         Polygon thisTile = (Polygon) event.getSource();
         //thisTile.setFill(Color.DODGERBLUE);
     }
+
+    /**
+     * Invoked on mouse exit of the selection circle.
+     * @param event The Mouse Event which invoked this listener.
+     */
     public void handleSelectionCircleMouseExit(MouseEvent event) {
         selectionCircle.setVisible(false);
     }
 
+    /**
+     * Send each polygon (hex) to the Hex tools class to have its
+     * set of points mutated.
+     * Each has has 6 vertices with with 2 points each, so 12 points.
+     *
+     * Refer to Hex.java for documentation on point mutation.
+     */
     public void drawHexGrid() {
 
 
