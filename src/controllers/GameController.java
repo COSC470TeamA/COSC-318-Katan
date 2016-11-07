@@ -10,9 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
-import models.Coordinate;
-import models.Hex;
-import models.HexagonCoordinate;
+import models.*;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -60,12 +58,35 @@ public class GameController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         createTiles();
-        ImagePattern imagePattern = new ImagePattern(new Image("/assets/images/lumber.jpeg"));
-        
-        allTiles.forEach((hex) -> {
-            hex.setFill(imagePattern);
-        });
+        ImagePattern lumberImagePattern = new ImagePattern(new Image("/assets/images/lumber.jpeg"));
+        ImagePattern grainImagePattern = new ImagePattern(new Image("/assets/images/grain.jpg"));
 
+
+
+        TileStack tileStack = new TileStack();
+        allTiles.forEach((hex) -> {
+            Resource next = tileStack.next();
+            switch (next) {
+                case LUMBER:
+                    hex.setFill(lumberImagePattern);
+                    break;
+                case WOOL:
+
+                    break;
+                case GRAIN:
+                    hex.setFill(grainImagePattern);
+                    break;
+                case ORE:
+
+                    break;
+                case BRICK:
+
+                    break;
+                case DESERT:
+
+                    break;
+            }
+        });
     }
 
     /**
