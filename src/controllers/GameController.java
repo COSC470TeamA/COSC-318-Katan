@@ -59,11 +59,12 @@ public class GameController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         createTiles();
-        ImagePattern lumberImagePattern = new ImagePattern(new Image("/assets/images/lumber.jpeg"));
+
+        ImagePattern lumberImagePattern = new ImagePattern(new Image("/assets/images/lumber.jpg"));
         ImagePattern grainImagePattern = new ImagePattern(new Image("/assets/images/grain.jpg"));
         ImagePattern oreImagePattern = new ImagePattern(new Image("/assets/images/ore.jpg"));
-        ImagePattern woolImagePattern = new ImagePattern(new Image("/assets/images/wool.png"));
-        ImagePattern brickImagePattern = new ImagePattern(new Image("/assets/images/brick.jpeg"));
+        ImagePattern woolImagePattern = new ImagePattern(new Image("/assets/images/wool.jpg"));
+        ImagePattern brickImagePattern = new ImagePattern(new Image("/assets/images/brick.jpg"));
         ImagePattern desertImagePattern = new ImagePattern(new Image("/assets/images/desert.jpeg"));
 
         allTiles.forEach((tile) -> {
@@ -93,6 +94,7 @@ public class GameController implements Initializable {
 
     /**
      * Determines size of the game board.
+     * Creates all game tile objects.
      * Attaches listeners to all game tiles.
      * Draws the tiles.
      */
@@ -152,6 +154,8 @@ public class GameController implements Initializable {
     public void handleTileClick(MouseEvent event) {
         Polygon clickedTile = (Polygon) event.getSource();
         System.out.println("Clicked " + clickedTile.toString());
+        System.out.println("at " + getCoords(clickedTile).getX() + ", " + getCoords(clickedTile).getY());
+        System.out.println(hexToTile(clickedTile).getResource().toString());
         p(getCoords(clickedTile).toString());
     }
 
@@ -245,6 +249,43 @@ public class GameController implements Initializable {
         int row = Integer.valueOf(id.substring(5, 6));
         int col = Integer.valueOf(id.substring(6, 7));
         return new HexagonCoordinate(row, col);
+    }
+
+    /**
+     * Takes a hexagon and returns the Tile based on the logical coordinates.
+     *
+     * @param hex
+     * @return
+     */
+    public Tile hexToTile(Polygon hex) {
+        HexagonCoordinate logicalCoords = getCoords(hex);
+        int row = logicalCoords.getX();
+        int col = logicalCoords.getY();
+        int arrayIndex = 0;
+        switch (row) {
+            case 0:
+                arrayIndex = 0;
+                break;
+            case 1:
+                arrayIndex = 3;
+                break;
+            case 2:
+                arrayIndex = 7;
+                break;
+            case 3:
+                arrayIndex = 12;
+                break;
+            case 4:
+                arrayIndex = 16;
+                break;
+        }
+        // The first and last rows do not have a 0th hexagon
+        if (row == 0 || row == 4) {
+            col --;
+        }
+        arrayIndex += col;
+
+        return allTiles.get(arrayIndex);
     }
 
     public static void p(String s) {
