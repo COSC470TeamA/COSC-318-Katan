@@ -6,7 +6,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -40,7 +39,9 @@ public class GameController implements Initializable {
                      FXHex41, FXHex42, FXHex43;
 
     /** A list for all the tiles (hexagon shapes) on the board */
-    ArrayList<Polygon> allTiles = new ArrayList<>(19);
+    ArrayList<Polygon> allHexagons = new ArrayList<>(19);
+
+    ArrayList<Tile> allTiles = new ArrayList<>(19);
 
     /** Object with tools for calculating and mutating hexagon points */
     Hex hex = new Hex();
@@ -63,18 +64,41 @@ public class GameController implements Initializable {
 
 
 
-        TileStack tileStack = new TileStack();
-        allTiles.forEach((hex) -> {
-            Resource next = tileStack.next();
-            switch (next) {
+        //TileStack tileStack = new TileStack();
+//        allHexagons.forEach((hex) -> {
+//            Resource next = tileStack.next();
+//            switch (next) {
+//                case LUMBER:
+//                    hex.setFill(lumberImagePattern);
+//                    break;
+//                case WOOL:
+//
+//                    break;
+//                case GRAIN:
+//                    hex.setFill(grainImagePattern);
+//                    break;
+//                case ORE:
+//
+//                    break;
+//                case BRICK:
+//
+//                    break;
+//                case DESERT:
+//
+//                    break;
+//            }
+//        });
+        allTiles.forEach((tile) -> {
+            Resource thisResource = tile.getResource();
+            switch (thisResource) {
                 case LUMBER:
-                    hex.setFill(lumberImagePattern);
+                    tile.getHex().setFill(lumberImagePattern);
                     break;
                 case WOOL:
 
                     break;
                 case GRAIN:
-                    hex.setFill(grainImagePattern);
+                    tile.getHex().setFill(grainImagePattern);
                     break;
                 case ORE:
 
@@ -100,16 +124,35 @@ public class GameController implements Initializable {
         // Calculate the horizontal center of the board's container, offset for the board itself
         BOARD_PADDING_X = boardPane.getPrefWidth() / 2 - 4 * hex.getR();
 
-
+        RollMarkerStack rollMarkerStack = new RollMarkerStack();
+        TileStack tileStack = new TileStack();
 
         selectionCircle.setVisible(false);
         selectionCircle.setRadius(SELECTION_CIRCLE_RADIUS);
+
         boardPane.getChildren().forEach((hex) -> {
-            if (hex.getId().startsWith("FXHex"))
-                allTiles.add((Polygon) hex);
+
+            if (hex.getId().startsWith("FXHex")) {
+                Polygon thisHex = (Polygon) hex;
+                allHexagons.add(thisHex);
+                HexagonCoordinate coord = getCoords(thisHex);
+
+                Resource nextResource = tileStack.next();
+                Tile tile;
+                if (nextResource.equals(Resource.DESERT)) {
+                    // Don't pop a marker if resource is desert
+                    // There are no markers on the desert
+                    tile = new Tile(coord, thisHex, nextResource, null);
+                }
+                else {
+                    tile = new Tile(coord, thisHex, nextResource, rollMarkerStack.next());
+                }
+                allTiles.add(tile);
+            }
+
         });
 
-        allTiles.forEach((hex) -> {
+        allHexagons.forEach((hex) -> {
             hex.setLayoutY(BOARD_PADDING_Y);
             hex.setLayoutX(BOARD_PADDING_X);
             hex.setOnMouseClicked((event) -> handleTileClick(event));
