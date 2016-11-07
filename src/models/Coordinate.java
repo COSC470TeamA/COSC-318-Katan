@@ -18,6 +18,13 @@ public class Coordinate {
         this.y = y;
     }
 
+    /**
+     * Determines if a mouse coordinate is close to a vertex.
+     * Close means that the coordinates are less than CLOSE pixels away.
+     *
+     * @param b The coordinate to be checked for closeness, against this.
+     * @return
+     */
     public boolean isCloseTo(Coordinate b) {
         return Math.abs(this.getX() - b.getX()) < CLOSE && Math.abs(this.getY() - b.getY()) < CLOSE;
     }

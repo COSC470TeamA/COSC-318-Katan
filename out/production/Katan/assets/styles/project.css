@@ -1,8 +1,0 @@
-/* Applies project-level style to any view element with the attribute stylesheets="@../assets/styles/project.css" */
-
-Button {
-    -fx-background-color: darkgrey;
-}
-Pane {
-    -fx-background-color: black;
-}
