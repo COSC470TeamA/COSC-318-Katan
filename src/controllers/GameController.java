@@ -3,9 +3,11 @@ package controllers;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import models.Coordinate;
@@ -16,21 +18,27 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import static java.lang.Thread.sleep;
 
 
 public class GameController implements Initializable {
+    /** The container for the game board */
     @FXML
     Pane boardPane;
 
+    /** Circle used to highlight the mouseover of vertices. */
     @FXML
     Circle selectionCircle;
 
+    /** The polygons used to represent game tiles. */
     @FXML
     Polygon          FXHex01, FXHex02, FXHex03,
+
                 FXHex10, FXHex11, FXHex12, FXHex13,
+
             FXHex20, FXHex21, FXHex22, FXHex23, FXHex24,
+
                 FXHex30, FXHex31, FXHex32, FXHex33,
+
                      FXHex41, FXHex42, FXHex43;
 
     /** A list for all the tiles (hexagon shapes) on the board */
@@ -40,14 +48,32 @@ public class GameController implements Initializable {
     Hex hex = new Hex();
 
     /** The starting position of the hexes, relative to the upper left of their container */
-    double BOARD_PADDING_X, BOARD_PADDING_Y = 10;
+    double BOARD_PADDING_X, BOARD_PADDING_Y = 0;
 
     /** The inital size of all edges of all tiles */
     double SIDE_LENGTH = 50;
 
+    /** The radius of the selection circle */
+    double SELECTION_CIRCLE_RADIUS = 10;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        createTiles();
+        ImagePattern imagePattern = new ImagePattern(new Image("/assets/images/lumber.jpeg"));
+        
+        allTiles.forEach((hex) -> {
+            hex.setFill(imagePattern);
+        });
+
+    }
+
+    /**
+     * Determines size of the game board.
+     * Attaches listeners to all game tiles.
+     * Draws the tiles.
+     */
+    public void createTiles() {
         // Set the length of every side of the hex tiles (ie, set the board size)
         hex.setSideLength(SIDE_LENGTH);
         // Calculate the horizontal center of the board's container, offset for the board itself
@@ -56,7 +82,7 @@ public class GameController implements Initializable {
 
 
         selectionCircle.setVisible(false);
-        selectionCircle.setRadius(10);
+        selectionCircle.setRadius(SELECTION_CIRCLE_RADIUS);
         boardPane.getChildren().forEach((hex) -> {
             if (hex.getId().startsWith("FXHex"))
                 allTiles.add((Polygon) hex);
@@ -75,7 +101,6 @@ public class GameController implements Initializable {
         selectionCircle.setOnMouseExited((event) -> handleSelectionCircleMouseExit(event));
 
         drawHexGrid();
-
     }
 
     /**
@@ -116,12 +141,11 @@ public class GameController implements Initializable {
      */
     public void handleMouseEnter(MouseEvent event) {
         Polygon thisTile = (Polygon) event.getSource();
-        thisTile.setFill(Color.LIGHTBLUE);
         selectionCircle.setVisible(false);
     }
     public void handleMouseExit(MouseEvent event) {
         Polygon thisTile = (Polygon) event.getSource();
-        thisTile.setFill(Color.DODGERBLUE);
+        //thisTile.setFill(Color.DODGERBLUE);
     }
     public void handleSelectionCircleMouseExit(MouseEvent event) {
         selectionCircle.setVisible(false);
