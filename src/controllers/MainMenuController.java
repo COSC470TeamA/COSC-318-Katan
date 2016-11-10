@@ -40,6 +40,11 @@ public class MainMenuController implements Initializable {
         // Start a client connection
         startClientConnection();
     }
+    public void joinGameButtonHandler(ActionEvent event) {
+        // Code for joining a game goes here
+        startClientConnection();
+    }
+
     public void launchGame(ActionEvent event) {
         // Create the stage for the game and show it
         //showGameStage();
@@ -78,10 +83,7 @@ public class MainMenuController implements Initializable {
         Stage stage  = (Stage) source.getScene().getWindow();
         stage.close();
     }
-    public void joinGameButtonHandler(ActionEvent event) {
-        // Code for joining a game goes here
-        startClientConnection();
-    }
+
     public void exitButtonHandler() {
         System.exit(0);
     }

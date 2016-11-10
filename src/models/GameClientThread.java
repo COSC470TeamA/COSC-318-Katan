@@ -1,6 +1,7 @@
 package models;
 
 import controllers.MainMenuController;
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -18,28 +19,36 @@ import java.util.ResourceBundle;
 /**
  * Created by steve on 2016-11-10.
  */
-public class GameClientThread extends Thread implements Initializable {
-
-    protected DatagramSocket datagramSocket;
+public class GameClientThread extends Application implements Runnable {
+    Stage gameStage;
+    DatagramSocket dsocket;
 
     public GameClientThread() throws IOException {
         this("GameClientThread");
     }
+
     public GameClientThread(String name) throws IOException {
-        super(name);
+        super();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        dsocket = new DatagramSocket();
+        run();
+        gameStage = stage;
+        stage.show();
+
     }
 
     public void run() {
 
         try {
-            // get a datagram socket
-            DatagramSocket dsocket = new DatagramSocket();
-
-            // send request
             byte[] buf = new byte[256];
+
             InetAddress address = InetAddress.getByName("localhost");
-            DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 4445);
-            dsocket.send(packet);
+            DatagramPacket packet = new DatagramPacket(buf, buf.length);
+
+            sendRequest(packet, buf, address);
 
             // get response
             packet = new DatagramPacket(buf, buf.length);
@@ -50,40 +59,23 @@ public class GameClientThread extends Thread implements Initializable {
             System.out.println("CLIENT SEES: " + received);
 
             dsocket.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //showGameStage();
-
-    }
-
-    public void showGameStage() {
-        System.out.println("Initializing Game Controller");
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainMenuController.class.getResource("../views/Game.fxml"));
-        AnchorPane anchorPane = null;
-        try {
-            anchorPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Stage gameStage = new Stage();
-        gameStage.setTitle("Katan");
-        Scene gameScene = new Scene(anchorPane);
-        gameStage.initStyle(StageStyle.UTILITY);
-        gameStage.setResizable(false);
-        gameStage.setScene(gameScene);
 
-        gameStage.setResizable(true);
-        gameStage.setAlwaysOnTop(false);
-        gameStage.show();
 
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void sendRequest(DatagramPacket packet, byte[] buf, InetAddress address) {
 
+        buf = "message from client".getBytes();
+        packet = new DatagramPacket(buf, buf.length, address, 4445);
+        try {
+            dsocket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+
 }
