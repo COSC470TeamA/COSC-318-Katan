@@ -10,9 +10,11 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import models.GameClient;
+import server.GameServer;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.*;
 import java.util.ResourceBundle;
 
 /**
@@ -33,36 +35,44 @@ public class MainMenuController implements Initializable {
     public void createGameButtonHandler(ActionEvent event) {
         // Code for creating a game goes here
         launchGame(event);
+        // Start a server thread for the game
+        startServerConnection();
+        // Start a client connection
+        startClientConnection();
     }
-    public void  launchGame(ActionEvent event) {
+    public void launchGame(ActionEvent event) {
         // Create the stage for the game and show it
-        showGameStage();
+        //showGameStage();
+        // Start a client thread
+        //startClientConnection();
         // Close the main menu
-        closeMenuStage(event);
+        //closeMenuStage(event);
 
     }
 
     public void showGameStage() {
+        p("Initializing Game Controller");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainMenuController.class.getResource("../views/Game.fxml"));
+        AnchorPane anchorPane = null;
         try {
-            p("Initializing Game Controller");
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainMenuController.class.getResource("../views/Game.fxml"));
-            AnchorPane anchorPane = loader.load();
-            Stage gameStage = new Stage();
-            gameStage.setTitle("Modify Parameters");
-            Scene gameScene = new Scene(anchorPane);
-            gameStage.initStyle(StageStyle.UTILITY);
-            gameStage.setResizable(false);
-            gameStage.setScene(gameScene);
-
-            gameStage.setResizable(true);
-            gameStage.setAlwaysOnTop(false);
-            gameStage.show();
-
+            anchorPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Stage gameStage = new Stage();
+        gameStage.setTitle("Modify Parameters");
+        Scene gameScene = new Scene(anchorPane);
+        gameStage.initStyle(StageStyle.UTILITY);
+        gameStage.setResizable(false);
+        gameStage.setScene(gameScene);
+
+        gameStage.setResizable(true);
+        gameStage.setAlwaysOnTop(false);
+        gameStage.show();
+
     }
+
     public void closeMenuStage(ActionEvent event) {
         Node  source = (Node)  event.getSource();
         Stage stage  = (Stage) source.getScene().getWindow();
@@ -70,12 +80,32 @@ public class MainMenuController implements Initializable {
     }
     public void joinGameButtonHandler(ActionEvent event) {
         // Code for joining a game goes here
+        startClientConnection();
     }
     public void exitButtonHandler() {
         System.exit(0);
     }
     public void exitButtonHandler(ActionEvent event) {
         exitButtonHandler();
+    }
+
+    public void startServerConnection() {
+        String[] args = {};
+        try {
+            GameServer.main(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startClientConnection() {
+        // Start a client connection
+        String[] args = {};
+        try {
+            GameClient.main(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public void p(String s) {
         System.out.println(s);
