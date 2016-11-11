@@ -1,6 +1,7 @@
 package server;
 
 import controllers.MainMenuController;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.GameClientThread;
+import models.ServerLog;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -24,6 +26,9 @@ public class GameServerThread extends Thread {
     public GameServerThread() throws IOException {
         this("GameServerThread");
     }
+
+
+
     public GameServerThread(String name) throws IOException {
         super(name);
         datagramSocket = new DatagramSocket(4445);
@@ -82,33 +87,15 @@ public class GameServerThread extends Thread {
     }
 
     public void openServerLog() {
-        try {
-            System.out.println("Initializing Server Log");
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainMenuController.class.getResource("../views/ServerLog.fxml"));
-            AnchorPane anchorPane = null;
-            try {
-                anchorPane = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            
-                Stage serverLogStage = new Stage();
 
-            serverLogStage.setTitle("Server Log");
-            Scene serverLogScene = new Scene(anchorPane);
-            serverLogStage.initStyle(StageStyle.UTILITY);
-            serverLogStage.setResizable(false);
-            serverLogStage.setScene(serverLogScene);
 
-            serverLogStage.setResizable(true);
-            serverLogStage.setAlwaysOnTop(false);
+//        try {
+//            new ServerLog().start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-            serverLogStage.show();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

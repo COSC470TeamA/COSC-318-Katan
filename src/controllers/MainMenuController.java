@@ -95,7 +95,7 @@ public class MainMenuController implements Initializable {
         String[] args = {};
         try {
             GameServer.main(args);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -37,6 +37,8 @@ public class GameClient {
 
             new GameClientThread().start(gameStage);
 
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

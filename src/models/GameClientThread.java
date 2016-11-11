@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 /**
  * Created by steve on 2016-11-10.
  */
-public class GameClientThread extends Application implements Runnable {
+public class GameClientThread extends Application {
     Stage gameStage;
     DatagramSocket dsocket;
 
@@ -30,12 +30,16 @@ public class GameClientThread extends Application implements Runnable {
     public GameClientThread(String name) throws IOException {
         super();
     }
+    public GameClientThread(Stage stage) throws Exception {
+        start(stage);
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
         dsocket = new DatagramSocket();
         run();
         gameStage = stage;
+        stage.setAlwaysOnTop(false);
         stage.show();
 
     }
@@ -68,7 +72,7 @@ public class GameClientThread extends Application implements Runnable {
 
     public void sendRequest(DatagramPacket packet, byte[] buf, InetAddress address) {
 
-        buf = "message from client".getBytes();
+        buf = "Client thread is ready".getBytes();
         packet = new DatagramPacket(buf, buf.length, address, 4445);
         try {
             dsocket.send(packet);
