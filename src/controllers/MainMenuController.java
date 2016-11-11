@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.GameClient;
 import server.GameServer;
+import server.GameServerThread;
 
 import java.io.IOException;
 import java.net.*;
@@ -34,7 +35,7 @@ public class MainMenuController implements Initializable {
 
     public void createGameButtonHandler(ActionEvent event) {
         // Code for creating a game goes here
-        launchGame(event);
+
         // Start a server thread for the game
         startServerConnection();
         // Start a client connection
@@ -43,16 +44,6 @@ public class MainMenuController implements Initializable {
     public void joinGameButtonHandler(ActionEvent event) {
         // Code for joining a game goes here
         startClientConnection();
-    }
-
-    public void launchGame(ActionEvent event) {
-        // Create the stage for the game and show it
-        //showGameStage();
-        // Start a client thread
-        //startClientConnection();
-        // Close the main menu
-        //closeMenuStage(event);
-
     }
 
     public void showGameStage() {
@@ -95,6 +86,10 @@ public class MainMenuController implements Initializable {
         String[] args = {};
         try {
             GameServer.main(args);
+
+            new GameServerThread().start();
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
