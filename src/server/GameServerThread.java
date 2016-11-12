@@ -41,7 +41,8 @@ public class GameServerThread  extends Thread {
     public void run() {
         System.out.println("NEW SERVER THREAD RUNNING");
 
-//        showServerLog();
+
+
 
         String receivedMessage = "";
         byte[] buf = new byte[256];

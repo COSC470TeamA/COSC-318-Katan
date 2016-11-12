@@ -1,5 +1,6 @@
 package models;
 
+import controllers.GameController;
 import controllers.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ import java.util.ResourceBundle;
 public class GameClientThread extends Application {
     Stage gameStage;
     DatagramSocket dsocket;
+    GameController gameController;
 
     public GameClientThread() throws IOException {
         this("GameClientThread");
@@ -35,12 +37,38 @@ public class GameClientThread extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stageNOUSE) throws Exception {
+
+        try {
+            System.out.println("Initializing Game Controller");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainMenuController.class.getResource("../views/Game.fxml"));
+            AnchorPane anchorPane = null;
+            try {
+                anchorPane = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            gameController = loader.getController();
+            Stage stage = new Stage();
+            stage.setTitle("Katan");
+            Scene gameScene = new Scene(anchorPane);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            stage.setScene(gameScene);
+
+            stage.setResizable(true);
+            stage.setAlwaysOnTop(false);
+
         dsocket = new DatagramSocket();
         run();
         gameStage = stage;
         stage.setAlwaysOnTop(false);
         stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -67,7 +95,7 @@ public class GameClientThread extends Application {
             e.printStackTrace();
         }
 
-
+        gameController.p("From GameClientThread");
     }
 
     public void sendRequest(DatagramPacket packet, byte[] buf, InetAddress address) {

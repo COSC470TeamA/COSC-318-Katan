@@ -3,6 +3,7 @@ package controllers;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -13,6 +14,7 @@ import models.*;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 
@@ -105,10 +107,12 @@ public class GameController implements Initializable {
         BOARD_PADDING_X = boardPane.getPrefWidth() / 2 - 4 * hex.getR();
 
         RollMarkerStack rollMarkerStack = new RollMarkerStack();
-        TileStack tileStack = new TileStack();
+        TileStack tileStack = TileStack.getInstance();
 
         selectionCircle.setVisible(false);
         selectionCircle.setRadius(SELECTION_CIRCLE_RADIUS);
+
+        Iterator<Resource> iter = tileStack.getIterator();
 
         boardPane.getChildren().forEach((hex) -> {
 
@@ -117,7 +121,9 @@ public class GameController implements Initializable {
                 allHexagons.add(thisHex);
                 HexagonCoordinate coord = getCoords(thisHex);
 
-                Resource nextResource = tileStack.next();
+                //Resource nextResource = tileStack.next();
+
+                Resource nextResource = iter.next();
                 Tile tile;
                 if (nextResource.equals(Resource.DESERT)) {
                     // Don't pop a marker if resource is desert
@@ -288,7 +294,9 @@ public class GameController implements Initializable {
         return allTiles.get(arrayIndex);
     }
 
-    public static void p(String s) {
-        System.out.println(s);
+    @FXML
+    Label debuggingLabel;
+    public void p(String s) {
+        debuggingLabel.setText(s);
     }
 }
