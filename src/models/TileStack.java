@@ -44,13 +44,10 @@ public class TileStack {
     }
 
     /**
-     * Pops off a tile from the shuffled deck and returns it.
+     * Get the iterator over the list of Resources.
      *
-     * @return The next tile in the shuffled stack.
+     * @return The iterator.
      */
-    public Resource next() {
-        return stack.remove(0);
-    }
     public Iterator<Resource> getIterator() {
         return stack.iterator();
     }

@@ -42,11 +42,14 @@ public class GameController implements Initializable {
 
     /** A list for all the tiles (hexagon shapes) on the board */
     ArrayList<Polygon> allHexagons = new ArrayList<>(19);
-
+    /** A list for all the tiles (resources) on the board */
     ArrayList<Tile> allTiles = new ArrayList<>(19);
 
     /** Object with tools for calculating and mutating hexagon points */
     Hex hex = new Hex();
+
+    /** The hand of cards that belongs to this game */
+    Hand hand = new Hand();
 
     /** The starting position of the hexes, relative to the upper left of their container */
     double BOARD_PADDING_X, BOARD_PADDING_Y = 0;
@@ -62,6 +65,13 @@ public class GameController implements Initializable {
 
         createTiles();
 
+        setTileResources();
+
+    }
+    /**
+     * Gets the stack of tile pieces to apply a Resource to each hexagon.
+     */
+    public void setTileResources() {
         ImagePattern lumberImagePattern = new ImagePattern(new Image("/assets/images/lumber.jpg"));
         ImagePattern grainImagePattern = new ImagePattern(new Image("/assets/images/grain.jpg"));
         ImagePattern oreImagePattern = new ImagePattern(new Image("/assets/images/ore.jpg"));
@@ -106,13 +116,14 @@ public class GameController implements Initializable {
         // Calculate the horizontal center of the board's container, offset for the board itself
         BOARD_PADDING_X = boardPane.getPrefWidth() / 2 - 4 * hex.getR();
 
-        RollMarkerStack rollMarkerStack = new RollMarkerStack();
+        RollMarkerStack rollMarkerStack = RollMarkerStack.getInstance();
         TileStack tileStack = TileStack.getInstance();
 
         selectionCircle.setVisible(false);
         selectionCircle.setRadius(SELECTION_CIRCLE_RADIUS);
 
-        Iterator<Resource> iter = tileStack.getIterator();
+        Iterator<Resource> tileStackIterator = tileStack.getIterator();
+        Iterator<RollMarker> rollMarkerIterator = rollMarkerStack.getIterator();
 
         boardPane.getChildren().forEach((hex) -> {
 
@@ -121,17 +132,16 @@ public class GameController implements Initializable {
                 allHexagons.add(thisHex);
                 HexagonCoordinate coord = getCoords(thisHex);
 
-                //Resource nextResource = tileStack.next();
-
-                Resource nextResource = iter.next();
+                Resource nextResource = tileStackIterator.next();
                 Tile tile;
+
                 if (nextResource.equals(Resource.DESERT)) {
                     // Don't pop a marker if resource is desert
                     // There are no markers on the desert
                     tile = new Tile(coord, thisHex, nextResource, null);
                 }
                 else {
-                    tile = new Tile(coord, thisHex, nextResource, rollMarkerStack.next());
+                    tile = new Tile(coord, thisHex, nextResource, rollMarkerIterator.next());
                 }
                 allTiles.add(tile);
             }
@@ -162,7 +172,7 @@ public class GameController implements Initializable {
         System.out.println("Clicked " + clickedTile.toString());
         System.out.println("at " + getCoords(clickedTile).getX() + ", " + getCoords(clickedTile).getY());
         System.out.println(hexToTile(clickedTile).getResource().toString());
-        p(getCoords(clickedTile).toString());
+        p(getCoords(clickedTile).toString() + " Marker = " + hexToTile(clickedTile).getRollMarker().getRoll());
     }
 
     /**

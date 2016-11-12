@@ -5,17 +5,15 @@ import javafx.scene.shape.Polygon;
 /**
  * Created by steve on 2016-11-07.
  */
-public class Tile {
+public class Tile extends ResourceType {
 
     /** The logical position of the tile, row and column.
-     * The physical position can be determined via Hex.
-     */
+     * The physical position can be determined via Hex. */
     HexagonCoordinate logicalCoordinate;
 
     Polygon hex;
 
-    /** The resource that the tile belongs to. */
-    Resource resource;
+    /** Tiles belong to one Resource */
 
     /** The roll marker on a tile which determines the probability. */
     RollMarker rollMarker;
@@ -41,13 +39,6 @@ public class Tile {
         this.logicalCoordinate = logicalCoordinate;
     }
 
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
 
     public RollMarker getRollMarker() {
         return rollMarker;

@@ -13,13 +13,12 @@
          <children>
             <Pane prefHeight="92.0" prefWidth="657.0">
                <children>
-                  <Label text="Katan" textAlignment="CENTER" />
+                  <Label fx:id="debuggingLabel" text="12" />
                </children>
             </Pane>
             <Pane fx:id="boardPane" prefHeight="424.0" prefWidth="657.0">
                <children>
-                  <Label fx:id="debuggingLabel" text="12" />
-                   <Polygon fx:id="FXHex01" styleClass="lumber" fill="DODGERBLUE" layoutX="170.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" />
+                   <Polygon fx:id="FXHex01" fill="DODGERBLUE" layoutX="170.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" styleClass="lumber" />
                    <Polygon fx:id="FXHex02" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
                    <Polygon fx:id="FXHex03" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
 

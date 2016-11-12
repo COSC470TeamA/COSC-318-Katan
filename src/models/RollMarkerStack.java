@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * Created by steve on 2016-11-07.
@@ -10,11 +11,13 @@ public class RollMarkerStack {
     /** The stack of markers */
     ArrayList<RollMarker> stack = new ArrayList<>(18);
 
+    public static RollMarkerStack instance = null;
+
     /** Creates a stack of roll markers.
      *
      * A tile stack will be a random arrangement.
      */
-    public RollMarkerStack() {
+     private RollMarkerStack() {
         for (int i = 0; i < 2; i++) {
             stack.add(new RollMarker(3));
             stack.add(new RollMarker(4));
@@ -30,13 +33,19 @@ public class RollMarkerStack {
 
         Collections.shuffle(stack);
     }
+    public static RollMarkerStack getInstance() {
+        if (instance == null) {
+            instance = new RollMarkerStack();
+        }
+        return instance;
+    }
 
     /**
-     * Pops off a roll marker from the shuffled deck and returns it.
+     * Get the iterator for the list of RollMarkers.
      *
      * @return The next marker in the shuffled stack.
      */
-    public RollMarker next() {
-        return stack.remove(0);
+    public Iterator<RollMarker> getIterator() {
+        return stack.iterator();
     }
 }
