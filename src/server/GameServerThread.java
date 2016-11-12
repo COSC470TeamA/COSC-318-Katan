@@ -2,6 +2,7 @@ package server;
 
 import controllers.ServerLogController;
 import javafx.application.Platform;
+import javafx.collections.ObservableArray;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -9,6 +10,7 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.*;
 
 /**
  * Created by steve on 2016-11-09.
@@ -18,6 +20,7 @@ public class GameServerThread  extends Thread {
     protected DatagramSocket datagramSocket;
     String receivedMessage;
     ServerLogController serverLogController;
+    Map<Integer, Integer> clients = new TreeMap<>();
 
     public GameServerThread() throws IOException {
         this("GameServerThread");
@@ -48,14 +51,23 @@ public class GameServerThread  extends Thread {
         byte[] buf = new byte[256];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
-        while (!receivedMessage.startsWith("EXIT")) {
-            receiveRequest(packet);
+        while (true) {
 
-
-            // Figure out response
-            String dString = "FROM SERVER THREAD";
+            // Receive
+            if (receiveRequest(packet).startsWith("EXIT")) {
+                break;
+            }
+String dString;
+            if (receivedMessage.equals("P")) {
+                dString = "GOT P";
+            }
+else {
+                // Figure out response
+                dString = "FROM SERVER THREAD";
+            }
             buf = dString.getBytes();
 
+            // Send
             sendResponse(packet, buf);
         }
 
@@ -63,7 +75,7 @@ public class GameServerThread  extends Thread {
         System.out.println("Server closed socket");
     }
 
-    private void receiveRequest(DatagramPacket packet) {
+    private String receiveRequest(DatagramPacket packet) {
         // Receive request
         try {
             datagramSocket.receive(packet);
@@ -72,12 +84,18 @@ public class GameServerThread  extends Thread {
             byte[] trimmed = new String(receivedBytes).trim().getBytes();
             receivedMessage = new String(trimmed, "UTF-8");
             receivedMessage.trim();
-            System.out.println("SERVER LOG: " + "received message: " + receivedMessage);
+            receivedMessage = receivedMessage.substring(0, packet.getLength());
+            System.out.println("SERVER LOG: " + "received message: " + receivedMessage + packet.getPort());
 
-
+            // Add the player #, port # mapping
+            if (!clients.containsValue(packet.getPort())) {
+                clients.put(clients.size() + 1, packet.getPort());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return receivedMessage;
     }
     private void sendResponse(DatagramPacket packet, byte[] buf) {
         // Send the response to the client at "address" and "port"

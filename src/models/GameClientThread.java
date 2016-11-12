@@ -63,6 +63,7 @@ public class GameClientThread extends Application {
             stage.setResizable(true);
             stage.setAlwaysOnTop(false);
 
+            // Constructor with no port number binds the DatagramSocket to any available port
         dsocket = new DatagramSocket();
         run();
         gameStage = stage;
@@ -77,6 +78,8 @@ public class GameClientThread extends Application {
 
     public void run() {
 
+        // Add a change listener to the toServerLabel
+        // Every time a change occurs in the label, the text is sent to the server
         gameController.getToServerLabel().textProperty().addListener((observable, oldValue, newValue) -> {
             sendRequest(newValue);
         });
@@ -88,15 +91,11 @@ public class GameClientThread extends Application {
             InetAddress address = InetAddress.getByName("localhost");
             DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
-            sendRequest(buf, buf.length, address);
+            sendRequest("FROM CLIENT");
 
             // get response
             packet = new DatagramPacket(buf, buf.length);
-            dsocket.receive(packet);
-
-            // display response
-            String received = new String(packet.getData());
-            System.out.println("CLIENT SEES: " + received);
+            receiveRequest(packet);
 
 
         } catch (IOException e) {
@@ -104,31 +103,63 @@ public class GameClientThread extends Application {
         }
 
         // Prove that the Game Client Thread can communicate with the Game Controller
-        gameController.p("From GameClientThread");
+        //gameController.p("From GameClientThread");
 
 
-
-        //dsocket.close();
     }
 
-    public void sendRequest(byte[] buf, int length, InetAddress address) {
-
-        //buf = "Client thread is ready".getBytes();
-        DatagramPacket packet = new DatagramPacket(buf, length, address, 4445);
+    private String receiveRequest(DatagramPacket packet) {
+        String receivedMessage = "";
         try {
-            dsocket.send(packet);
+            dsocket.receive(packet);
+
+
+        // display response
+        byte[] receivedBytes = packet.getData();
+        byte[] trimmed = new String(receivedBytes).trim().getBytes();
+
+
+            receivedMessage = new String(trimmed, "UTF-8");
+        receivedMessage.trim();
+        System.out.println("CLIENT SEES: " + receivedMessage);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return receivedMessage;
     }
+    /**
+     * Send a message to the server.
+     *
+     * @param message The message to be sent.
+     */
     public void sendRequest(String message) {
         try {
             sendRequest(message.getBytes(), message.length(), InetAddress.getByName("localhost"));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
+        if (message.startsWith("EXIT")) {
+            System.out.println("Client closed socket");
+            dsocket.close();
+        }
     }
+
+    public void sendRequest(byte[] buf, int length, InetAddress address) {
+
+        try {
+        DatagramPacket packet = new DatagramPacket(buf, length, address, 4445);
+        packet.setLength(length);
+
+            dsocket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
 }

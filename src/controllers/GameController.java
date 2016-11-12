@@ -319,6 +319,11 @@ public class GameController implements Initializable {
         return allTiles.get(arrayIndex);
     }
 
+    /**
+     * Label to put server bound messages in.
+     * The messages are automatically grabbed by the game client thread
+     * and forwarded to the server to be interpreted.
+     */
     @FXML
     Label toServerLabel;
     @FXML
@@ -329,6 +334,12 @@ public class GameController implements Initializable {
     public Label getToServerLabel() {
         return toServerLabel;
     }
+
+    /**
+     * When the Enter key is pressed, sets the toServerLabel text
+     * to be the text in this Text Field.
+     * @param event
+     */
     public void handleToServerTextFieldKeyPressed(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
             toServerLabel.setText(toServerTextField.getText());
