@@ -4,7 +4,6 @@ import controllers.GameController;
 import controllers.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -14,8 +13,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.net.UnknownHostException;
 
 /**
  * Created by steve on 2016-11-10.
@@ -36,6 +34,11 @@ public class GameClientThread extends Application {
         start(stage);
     }
 
+    /**
+     * Build a game stage and show it. Grabs a reference to the game stage's controller.
+     * @param stageNOUSE
+     * @throws Exception
+     */
     @Override
     public void start(Stage stageNOUSE) throws Exception {
 
@@ -74,13 +77,18 @@ public class GameClientThread extends Application {
 
     public void run() {
 
+        gameController.getToServerLabel().textProperty().addListener((observable, oldValue, newValue) -> {
+            sendRequest(newValue);
+        });
+
+
         try {
             byte[] buf = new byte[256];
 
             InetAddress address = InetAddress.getByName("localhost");
             DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
-            sendRequest(packet, buf, address);
+            sendRequest(buf, buf.length, address);
 
             // get response
             packet = new DatagramPacket(buf, buf.length);
@@ -90,21 +98,34 @@ public class GameClientThread extends Application {
             String received = new String(packet.getData());
             System.out.println("CLIENT SEES: " + received);
 
-            dsocket.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        // Prove that the Game Client Thread can communicate with the Game Controller
         gameController.p("From GameClientThread");
+
+
+
+        //dsocket.close();
     }
 
-    public void sendRequest(DatagramPacket packet, byte[] buf, InetAddress address) {
+    public void sendRequest(byte[] buf, int length, InetAddress address) {
 
-        buf = "Client thread is ready".getBytes();
-        packet = new DatagramPacket(buf, buf.length, address, 4445);
+        //buf = "Client thread is ready".getBytes();
+        DatagramPacket packet = new DatagramPacket(buf, length, address, 4445);
         try {
             dsocket.send(packet);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void sendRequest(String message) {
+        try {
+            sendRequest(message.getBytes(), message.length(), InetAddress.getByName("localhost"));
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }

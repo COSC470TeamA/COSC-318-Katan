@@ -4,7 +4,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
@@ -67,6 +70,8 @@ public class GameController implements Initializable {
 
         setTileResources();
 
+        toServerTextField.setOnKeyPressed((event) -> handleToServerTextFieldKeyPressed(event));
+
     }
     /**
      * Gets the stack of tile pieces to apply a Resource to each hexagon.
@@ -115,6 +120,7 @@ public class GameController implements Initializable {
         hex.setSideLength(SIDE_LENGTH);
         // Calculate the horizontal center of the board's container, offset for the board itself
         BOARD_PADDING_X = boardPane.getPrefWidth() / 2 - 4 * hex.getR();
+        System.out.println(boardPane.getPrefWidth());
 
         RollMarkerStack rollMarkerStack = RollMarkerStack.getInstance();
         TileStack tileStack = TileStack.getInstance();
@@ -159,6 +165,7 @@ public class GameController implements Initializable {
         selectionCircle.setLayoutX(BOARD_PADDING_X);
         selectionCircle.setLayoutY(BOARD_PADDING_Y);
         selectionCircle.setOnMouseExited((event) -> handleSelectionCircleMouseExit(event));
+        selectionCircle.setOnMouseClicked((event) -> handleSelectionCircleMouseClicked(event));
 
         drawHexGrid();
     }
@@ -221,6 +228,14 @@ public class GameController implements Initializable {
      */
     public void handleSelectionCircleMouseExit(MouseEvent event) {
         selectionCircle.setVisible(false);
+    }
+
+    /**
+     * Invoked on mouse click of the selection circle.
+     * @param event The Mouse Event which invoked this listener.
+     */
+    public void handleSelectionCircleMouseClicked(MouseEvent event) {
+
     }
 
     /**
@@ -305,8 +320,19 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    Label debuggingLabel;
+    Label toServerLabel;
+    @FXML
+    TextField toServerTextField;
     public void p(String s) {
-        debuggingLabel.setText(s);
+        toServerLabel.setText(s);
+    }
+    public Label getToServerLabel() {
+        return toServerLabel;
+    }
+    public void handleToServerTextFieldKeyPressed(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            toServerLabel.setText(toServerTextField.getText());
+        }
+
     }
 }

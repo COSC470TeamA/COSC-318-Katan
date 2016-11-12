@@ -26,7 +26,7 @@ public class GameServerThread  extends Thread {
 
 
     public GameServerThread(String name) throws IOException {
-        //super(name);
+        super(name);
         datagramSocket = new DatagramSocket(4445);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/ServerLog.fxml"));
@@ -67,11 +67,12 @@ public class GameServerThread  extends Thread {
         // Receive request
         try {
             datagramSocket.receive(packet);
+
             byte[] receivedBytes = packet.getData();
             byte[] trimmed = new String(receivedBytes).trim().getBytes();
             receivedMessage = new String(trimmed, "UTF-8");
             receivedMessage.trim();
-            System.out.println("SERVER LOG: " + "received " + receivedMessage);
+            System.out.println("SERVER LOG: " + "received message: " + receivedMessage);
 
 
         } catch (IOException e) {
