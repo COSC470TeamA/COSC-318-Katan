@@ -15,9 +15,10 @@ import java.util.*;
 /**
  * Created by steve on 2016-11-09.
  */
-public class GameServerThread  extends Thread {
+public class GameServerThread extends Thread {
 
     protected DatagramSocket datagramSocket;
+    private int PORT_NUM = 4445;
     String receivedMessage;
     ServerLogController serverLogController;
     Map<Integer, Integer> clients = new TreeMap<>();
@@ -27,24 +28,24 @@ public class GameServerThread  extends Thread {
     }
 
 
-
+    /**
+     * Spawns a game server thread and attaches a socket.
+     * @param name
+     * @throws IOException
+     */
     public GameServerThread(String name) throws IOException {
         super(name);
-        datagramSocket = new DatagramSocket(4445);
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/ServerLog.fxml"));
-        try {
-            Parent root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        serverLogController = loader.getController();
+        datagramSocket = new DatagramSocket(PORT_NUM);
     }
 
+    /**
+     * Listens for message coming in, determines a response and then
+     * sends the response.
+     *
+     * Automatically invoked on construction.
+     */
     public void run() {
         System.out.println("NEW SERVER THREAD RUNNING");
-
-
 
 
         String receivedMessage = "";
@@ -57,11 +58,10 @@ public class GameServerThread  extends Thread {
             if (receiveRequest(packet).startsWith("EXIT")) {
                 break;
             }
-String dString;
+            String dString;
             if (receivedMessage.equals("P")) {
                 dString = "GOT P";
-            }
-else {
+            } else {
                 // Figure out response
                 dString = "FROM SERVER THREAD";
             }
@@ -85,7 +85,7 @@ else {
             receivedMessage = new String(trimmed, "UTF-8");
             receivedMessage.trim();
             receivedMessage = receivedMessage.substring(0, packet.getLength());
-            System.out.println("SERVER LOG: " + "received message: " + receivedMessage + packet.getPort());
+            System.out.println("SERVER LOG: " + "received message: " + receivedMessage + ": from port: " + packet.getPort());
 
             // Add the player #, port # mapping
             if (!clients.containsValue(packet.getPort())) {
@@ -97,6 +97,7 @@ else {
 
         return receivedMessage;
     }
+
     private void sendResponse(DatagramPacket packet, byte[] buf) {
         // Send the response to the client at "address" and "port"
         InetAddress address = packet.getAddress();
@@ -108,8 +109,6 @@ else {
             e.printStackTrace();
         }
     }
-
-
 
 
 }
