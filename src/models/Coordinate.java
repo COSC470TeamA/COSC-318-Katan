@@ -29,6 +29,12 @@ public class Coordinate {
         return Math.abs(this.getX() - b.getX()) < CLOSE && Math.abs(this.getY() - b.getY()) < CLOSE;
     }
 
+    public Coordinate midpoint(Coordinate b) {
+        double midx = (this.getX() + b.getX()) / 2;
+        double midy = (this.getY() + b.getY()) / 2;
+        return new Coordinate(midx, midy);
+    }
+
     public double getX() {
         return x;
     }

@@ -190,15 +190,25 @@ public class GameController implements Initializable {
         Polygon thisTile = (Polygon) event.getSource();
         ObservableList<Double> points = thisTile.getPoints();
         ArrayList<Coordinate> tileVertices = new ArrayList<>(6);
-        for (int i = 0; i < 12; i ++) {
-            tileVertices.add(new Coordinate(points.get(i++), points.get(i)));
+        ArrayList<Coordinate> tileMidPoints = new ArrayList<>(6);
+        // Put each vertex (pair of points) in the list
+        for (int i = 0; i < 12; i += 2) {
+            tileVertices.add(new Coordinate(points.get(i), points.get(i + 1)));
         }
+        // Put each midpoint of each side in the list
+        for (int i = 0; i < 12; i += 2) {
+            tileMidPoints.add(new Coordinate(points.get(i), points.get(i + 1)).midpoint(
+                    new Coordinate(points.get((i + 2) % 12), points.get((i + 3) % 12))));
+        }
+        // Add the lists so we can iterate once only
+        tileVertices.addAll(tileMidPoints);
         Coordinate currMouseCoord = new Coordinate(event.getX(), event.getY());
         for (Coordinate vertex : tileVertices) {
             if (currMouseCoord.isCloseTo(vertex)) {
                 selectionCircle.setCenterX(vertex.getX());
                 selectionCircle.setCenterY(vertex.getY());
                 selectionCircle.setVisible(true);
+                break;
             }
         }
 

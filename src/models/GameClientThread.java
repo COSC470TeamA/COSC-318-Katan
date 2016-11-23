@@ -65,17 +65,18 @@ public class GameClientThread extends Application {
 
             // Constructor with no port number binds the DatagramSocket to any available port
         dsocket = new DatagramSocket();
-        run();
+
         gameStage = stage;
         stage.setAlwaysOnTop(false);
         stage.show();
+
+            run();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
     public void run() {
 
         // Add a change listener to the toServerLabel
@@ -84,26 +85,22 @@ public class GameClientThread extends Application {
             sendRequest(newValue);
         });
 
+    try {
+        byte[] buf = new byte[256];
 
-        try {
-            byte[] buf = new byte[256];
+        InetAddress address = InetAddress.getByName("localhost");
+        DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
-            InetAddress address = InetAddress.getByName("localhost");
-            DatagramPacket packet = new DatagramPacket(buf, buf.length);
+        sendRequest("FROM CLIENT");
 
-            sendRequest("FROM CLIENT");
-
-            // get response
-            packet = new DatagramPacket(buf, buf.length);
-            receiveRequest(packet);
+        // get response
+        packet = new DatagramPacket(buf, buf.length);
+        receiveRequest(packet);
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Prove that the Game Client Thread can communicate with the Game Controller
-        //gameController.p("From GameClientThread");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
 
 
     }

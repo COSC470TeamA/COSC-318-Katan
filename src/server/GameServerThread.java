@@ -22,6 +22,8 @@ public class GameServerThread extends Thread {
     String receivedMessage;
     ServerLogController serverLogController;
     Map<Integer, Integer> clients = new TreeMap<>();
+    boolean victoryIsReached = false;
+    int VICTORY_CONDITION = 4;
 
     public GameServerThread() throws IOException {
         this("GameServerThread");
@@ -52,7 +54,7 @@ public class GameServerThread extends Thread {
         byte[] buf = new byte[256];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
-        while (true) {
+        while (!victoryIsReached) {
 
             // Receive
             if (receiveRequest(packet).startsWith("EXIT")) {
