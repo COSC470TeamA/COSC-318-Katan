@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableArray;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import models.Dice;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -24,6 +25,7 @@ public class GameServerThread extends Thread {
     Map<Integer, Integer> clients = new TreeMap<>();
     boolean victoryIsReached = false;
     int VICTORY_CONDITION = 4;
+    Dice dice = new Dice();
 
     public GameServerThread() throws IOException {
         this("GameServerThread");
@@ -50,22 +52,32 @@ public class GameServerThread extends Thread {
         System.out.println("NEW SERVER THREAD RUNNING");
 
 
-        String receivedMessage = "";
+
         byte[] buf = new byte[256];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
         while (!victoryIsReached) {
 
             // Receive
-            if (receiveRequest(packet).startsWith("EXIT")) {
-                break;
-            }
+            receiveRequest(packet);
             String dString;
-            if (receivedMessage.equals("P")) {
-                dString = "GOT P";
-            } else {
-                // Figure out response
-                dString = "FROM SERVER THREAD";
+            switch (receivedMessage) {
+                case "P":
+                    dString = "GOT P";
+                    break;
+                case "FROM CLIENT":
+                    dString = "Server can see client";
+                    break;
+                case "rd":
+                    dString = String.valueOf(dice.roll());
+                    break;
+                case "":
+                    dString = "Server received blank message";
+                    break;
+                default:
+                    // Figure out response
+                    dString = "Message does not match cases";
+                    break;
             }
             buf = dString.getBytes();
 

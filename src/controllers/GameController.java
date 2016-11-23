@@ -3,6 +3,7 @@ package controllers;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -43,6 +44,12 @@ public class GameController implements Initializable {
 
                      FXHex41, FXHex42, FXHex43;
 
+    @FXML
+    Button rollDiceButton;
+
+    @FXML
+    public Label rollDiceLabel;
+
     /** A list for all the tiles (hexagon shapes) on the board */
     ArrayList<Polygon> allHexagons = new ArrayList<>(19);
     /** A list for all the tiles (resources) on the board */
@@ -71,6 +78,8 @@ public class GameController implements Initializable {
         setTileResources();
 
         toServerTextField.setOnKeyPressed((event) -> handleToServerTextFieldKeyPressed(event));
+
+        initializeButtons();
 
     }
     /**
@@ -329,6 +338,24 @@ public class GameController implements Initializable {
         return allTiles.get(arrayIndex);
     }
 
+    private void initializeButtons() {
+        rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
+    }
+private void handleDiceRollMouseClick(MouseEvent event) {
+    sendMessageToServer("rd");
+}
+
+    /**
+     * Sends a message to the server thread.
+     *
+     * @param message
+     */
+    private void sendMessageToServer(String message) {
+    if (toServerLabel.getText().equals(message)) {
+        toServerLabel.setText("");
+    }
+    toServerLabel.setText(message);
+}
     /**
      * Label to put server bound messages in.
      * The messages are automatically grabbed by the game client thread
@@ -344,6 +371,7 @@ public class GameController implements Initializable {
     public Label getToServerLabel() {
         return toServerLabel;
     }
+    public Label getRollDiceLabel() { return rollDiceLabel; }
 
     /**
      * When the Enter key is pressed, sets the toServerLabel text

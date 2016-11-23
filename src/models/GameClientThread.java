@@ -83,6 +83,17 @@ public class GameClientThread extends Application {
         // Every time a change occurs in the label, the text is sent to the server
         gameController.getToServerLabel().textProperty().addListener((observable, oldValue, newValue) -> {
             sendRequest(newValue);
+            switch (newValue) {
+                case "rd":
+                    // Set the dice label to display the roll from the server
+                    gameController.getRollDiceLabel().setText(receiveRequest());
+                    break;
+                case "":
+                    // If we have to clear the text field
+                    // receive the blank response so we don't get stuck
+                    receiveRequest();
+                    break;
+            }
         });
 
     try {
@@ -125,6 +136,13 @@ public class GameClientThread extends Application {
         }
 
         return receivedMessage;
+    }
+    private String receiveRequest() {
+        byte[] buf = new byte[256];
+        DatagramPacket packet = new DatagramPacket(buf, buf.length);
+        // get response
+        packet = new DatagramPacket(buf, buf.length);
+        return receiveRequest(packet);
     }
     /**
      * Send a message to the server.
