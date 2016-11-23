@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
 
 <AnchorPane prefHeight="654.0" prefWidth="918.0" stylesheets="@../assets/styles/project.css" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GameController">
    <children>
@@ -60,8 +61,10 @@
                    <Polygon fx:id="FXHex41" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
                    <Polygon fx:id="FXHex42" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
                    <Polygon fx:id="FXHex43" fill="DODGERBLUE" layoutX="170.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fx:id="selectionCircle" fill="#d9edff" layoutX="207.0" layoutY="141.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
-               </children>
+                   <Circle fx:id="selectionCircle" fill="#d9edff" layoutX="207.0" layoutY="141.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
+             <Circle fx:id="selectionCircle2" fill="#d9edff" layoutX="207.0" layoutY="141.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Rectangle fx:id="roadRectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutY="-17.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+         </children>
             </Pane>
             <Pane prefHeight="191.0" prefWidth="918.0">
                <children>

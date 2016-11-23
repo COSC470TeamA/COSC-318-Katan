@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import models.*;
 
 import java.net.URL;
@@ -30,7 +31,7 @@ public class GameController implements Initializable {
 
     /** Circle used to highlight the mouseover of vertices. */
     @FXML
-    Circle selectionCircle;
+    Circle selectionCircle, selectionCircle2;
 
     /** The polygons used to represent game tiles. */
     @FXML
@@ -48,7 +49,10 @@ public class GameController implements Initializable {
     Button rollDiceButton;
 
     @FXML
-    public Label rollDiceLabel;
+    Label rollDiceLabel;
+
+    @FXML
+    Rectangle roadRectangle;
 
     /** A list for all the tiles (hexagon shapes) on the board */
     ArrayList<Polygon> allHexagons = new ArrayList<>(19);
@@ -69,6 +73,9 @@ public class GameController implements Initializable {
 
     /** The radius of the selection circle */
     double SELECTION_CIRCLE_RADIUS = 10;
+
+    double ROAD_RECTABGLE_HEIGHT = 47;
+    double ROAD_RECTABGLE_WIDTH = 8;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -135,7 +142,12 @@ public class GameController implements Initializable {
         TileStack tileStack = TileStack.getInstance();
 
         selectionCircle.setVisible(false);
+        selectionCircle2.setVisible(false);
+        roadRectangle.setVisible(false);
         selectionCircle.setRadius(SELECTION_CIRCLE_RADIUS);
+        selectionCircle2.setRadius(SELECTION_CIRCLE_RADIUS);
+        roadRectangle.setHeight(ROAD_RECTABGLE_HEIGHT);
+        roadRectangle.setWidth(ROAD_RECTABGLE_WIDTH);
 
         Iterator<Resource> tileStackIterator = tileStack.getIterator();
         Iterator<RollMarker> rollMarkerIterator = rollMarkerStack.getIterator();
@@ -173,8 +185,14 @@ public class GameController implements Initializable {
         });
         selectionCircle.setLayoutX(BOARD_PADDING_X);
         selectionCircle.setLayoutY(BOARD_PADDING_Y);
+        selectionCircle2.setLayoutX(BOARD_PADDING_X);
+        selectionCircle2.setLayoutY(BOARD_PADDING_Y);
+        roadRectangle.setLayoutX(BOARD_PADDING_X);
+        roadRectangle.setLayoutY(BOARD_PADDING_Y);
         selectionCircle.setOnMouseExited((event) -> handleSelectionCircleMouseExit(event));
         selectionCircle.setOnMouseClicked((event) -> handleSelectionCircleMouseClicked(event));
+        selectionCircle2.setOnMouseExited((event) -> handleSelectionCircle2MouseExit(event));
+        selectionCircle2.setOnMouseClicked((event) -> handleSelectionCircle2MouseClicked(event));
 
         drawHexGrid();
     }
@@ -209,18 +227,33 @@ public class GameController implements Initializable {
             tileMidPoints.add(new Coordinate(points.get(i), points.get(i + 1)).midpoint(
                     new Coordinate(points.get((i + 2) % 12), points.get((i + 3) % 12))));
         }
-        // Add the lists so we can iterate once only
-        tileVertices.addAll(tileMidPoints);
+
         Coordinate currMouseCoord = new Coordinate(event.getX(), event.getY());
         for (Coordinate vertex : tileVertices) {
             if (currMouseCoord.isCloseTo(vertex)) {
-                selectionCircle.setCenterX(vertex.getX());
-                selectionCircle.setCenterY(vertex.getY());
-                selectionCircle.setVisible(true);
+                showSelectionCircle(vertex);
+                break;
+            }
+        }
+        for (Coordinate vertex : tileMidPoints) {
+            if (currMouseCoord.isCloseTo(vertex)) {
+                showSelectionCircle(vertex, true);
                 break;
             }
         }
 
+    }
+    public void showSelectionCircle(Coordinate coord) {
+        selectionCircle.setCenterX(coord.getX());
+        selectionCircle.setCenterY(coord.getY());
+        selectionCircle.setVisible(true);
+    }
+    public void showSelectionCircle(Coordinate coord, boolean isSide) {
+        if (isSide) {
+            selectionCircle2.setCenterX(coord.getX());
+            selectionCircle2.setCenterY(coord.getY());
+            selectionCircle2.setVisible(true);
+        }
     }
 
     /**
@@ -238,7 +271,6 @@ public class GameController implements Initializable {
      */
     public void handleMouseExit(MouseEvent event) {
         Polygon thisTile = (Polygon) event.getSource();
-        //thisTile.setFill(Color.DODGERBLUE);
     }
 
     /**
@@ -248,13 +280,20 @@ public class GameController implements Initializable {
     public void handleSelectionCircleMouseExit(MouseEvent event) {
         selectionCircle.setVisible(false);
     }
-
+    public void handleSelectionCircle2MouseExit(MouseEvent event) {
+        selectionCircle2.setVisible(false);
+    }
     /**
-     * Invoked on mouse click of the selection circle.
+     * Invoked on mouse click of the side selection circle.
      * @param event The Mouse Event which invoked this listener.
      */
+    public void handleSelectionCircle2MouseClicked(MouseEvent event) {
+        roadRectangle.setX(event.getX() - ROAD_RECTABGLE_WIDTH / 2);
+        roadRectangle.setY(event.getY() - SIDE_LENGTH / 2);
+        roadRectangle.setVisible(true);
+    }
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
-
+        // Nothing yet
     }
 
     /**
