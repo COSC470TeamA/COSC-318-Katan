@@ -11,6 +11,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -20,8 +22,11 @@ import models.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import static models.Resource.LUMBER;
+import static models.Resource.WOOL;
 
 
 public class GameController implements Initializable {
@@ -73,6 +78,7 @@ public class GameController implements Initializable {
 
     /** The radius of the selection circle */
     double SELECTION_CIRCLE_RADIUS = 10;
+    double ROLL_MARKER_CIRCLE_RADIUS = 20;
 
     double ROAD_RECTABGLE_HEIGHT = 47;
     double ROAD_RECTABGLE_WIDTH = 8;
@@ -83,6 +89,8 @@ public class GameController implements Initializable {
         createTiles();
 
         setTileResources();
+
+        setTileRoleMarkers();
 
         toServerTextField.setOnKeyPressed((event) -> handleToServerTextFieldKeyPressed(event));
 
@@ -126,6 +134,41 @@ public class GameController implements Initializable {
     }
 
     /**
+     * Gets the stack of tile pieces to apply a roll marker to each hexagon.
+     */
+    public void setTileRoleMarkers() {
+        allTiles.forEach((tile) -> {
+            if (!tile.getResource().name().equals("DESERT")) {
+                RollMarker thisRollMarker = tile.getRollMarker();
+
+                ArrayList<Coordinate> tileCoords = new ArrayList<>();
+
+                for (int i = 0; i < tile.getHex().getPoints().size() - 1; i++) {
+                    //sets of coords to calc centre of tile
+                    tileCoords.add(new Coordinate(tile.getHex().getPoints().get(i), tile.getHex().getPoints().get(i + 1)));
+                }
+
+                StackPane stackPane = new StackPane();
+
+                Circle markerCircle = new Circle();
+                markerCircle.setRadius(ROLL_MARKER_CIRCLE_RADIUS);
+                markerCircle.setFill(Color.WHITE);
+                markerCircle.setStroke(Color.BLACK);
+
+
+                Label markerLabel = new Label();
+                markerLabel.setText(String.valueOf(thisRollMarker.getRoll()));
+                stackPane.getChildren().addAll(markerCircle, markerLabel);
+                stackPane.setTranslateX(tileCoords.get(0).getX() - (SIDE_LENGTH/2) + (ROLL_MARKER_CIRCLE_RADIUS / 4));
+                stackPane.setTranslateY(tileCoords.get(0).getY() + (SIDE_LENGTH/2));
+                stackPane.setLayoutX(BOARD_PADDING_X);
+                stackPane.setLayoutY(BOARD_PADDING_Y);
+                boardPane.getChildren().addAll(stackPane);
+            }
+        });
+    }
+
+    /**
      * Determines size of the game board.
      * Creates all game tile objects.
      * Attaches listeners to all game tiles.
@@ -140,6 +183,7 @@ public class GameController implements Initializable {
 
         RollMarkerStack rollMarkerStack = RollMarkerStack.getInstance();
         TileStack tileStack = TileStack.getInstance();
+
 
         selectionCircle.setVisible(false);
         selectionCircle2.setVisible(false);
@@ -330,6 +374,10 @@ public class GameController implements Initializable {
         hex.calculateVertices(FXHex41, new HexagonCoordinate(4, 1));
         hex.calculateVertices(FXHex42, new HexagonCoordinate(4, 2));
         hex.calculateVertices(FXHex43, new HexagonCoordinate(4, 3));
+    }
+
+    public void drawRollMarkers() {
+
     }
 
     public HexagonCoordinate getCoords(Polygon hex) {
