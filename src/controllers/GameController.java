@@ -193,7 +193,6 @@ public class GameController implements Initializable {
         selectionCircle.setOnMouseClicked((event) -> handleSelectionCircleMouseClicked(event));
         selectionCircle2.setOnMouseExited((event) -> handleSelectionCircle2MouseExit(event));
         selectionCircle2.setOnMouseClicked((event) -> handleSelectionCircle2MouseClicked(event));
-
         drawHexGrid();
     }
 
