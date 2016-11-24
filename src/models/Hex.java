@@ -82,7 +82,7 @@ public class Hex {
     }
     public double getSideLength() { return side; }
 
-    public static double calculateH(double side) {
+    private static double calculateH(double side) {
         return (Math.sin(DegreesToRadians(30)) * side);
     }
 
