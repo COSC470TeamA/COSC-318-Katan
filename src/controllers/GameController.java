@@ -249,7 +249,8 @@ public class GameController implements Initializable {
         System.out.println("Clicked " + clickedTile.toString());
         System.out.println("at " + getCoords(clickedTile).getX() + ", " + getCoords(clickedTile).getY());
         System.out.println(hexToTile(clickedTile).getResource().toString());
-        p(getCoords(clickedTile).toString() + " Marker = " + hexToTile(clickedTile).getRollMarker().getRoll());
+        // Not necessary to send this data to the server now
+        //p(getCoords(clickedTile).toString() + " Marker = " + hexToTile(clickedTile).getRollMarker().getRoll());
     }
 
     /**
@@ -451,9 +452,7 @@ private void handleDiceRollMouseClick(MouseEvent event) {
     Label toServerLabel;
     @FXML
     TextField toServerTextField;
-    public void p(String s) {
-        toServerLabel.setText(s);
-    }
+
     public Label getToServerLabel() {
         return toServerLabel;
     }
