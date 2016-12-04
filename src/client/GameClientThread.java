@@ -1,4 +1,4 @@
-package models;
+package client;
 
 import controllers.GameController;
 import controllers.MainMenuController;

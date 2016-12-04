@@ -1,5 +1,3 @@
-package models;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +9,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         // Launch the first client activity.
-        Parent root = FXMLLoader.load(getClass().getResource("../views/MainMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/MainMenu.fxml"));
         primaryStage.setTitle("Katan");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();

@@ -337,7 +337,19 @@ public class GameController implements Initializable {
         roadRectangle.setVisible(true);
     }
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
-        // Nothing yet
+        Polygon polygon = new Polygon();
+        polygon.setFill(Color.WHITE);
+        polygon.setStroke(Color.BLACK);
+        polygon.setLayoutX(BOARD_PADDING_X);
+        polygon.setLayoutY(BOARD_PADDING_Y);
+        polygon.getPoints().addAll(new Double[]{
+                event.getX(), event.getY() - 15.0,
+                event.getX() - 10.0, event.getY() - 5.0,
+                event.getX() - 10.0, event.getY() + 10.0,
+                event.getX() + 10.0, event.getY() + 10.0,
+                event.getX() + 10.0, event.getY() - 5.0,
+        });
+        boardPane.getChildren().addAll(polygon);
     }
 
     /**
