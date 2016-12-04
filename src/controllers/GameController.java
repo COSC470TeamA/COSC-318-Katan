@@ -336,20 +336,9 @@ public class GameController implements Initializable {
         roadRectangle.setY(event.getY() - SIDE_LENGTH / 2);
         roadRectangle.setVisible(true);
     }
+
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
-        Polygon polygon = new Polygon();
-        polygon.setFill(Color.WHITE);
-        polygon.setStroke(Color.BLACK);
-        polygon.setLayoutX(BOARD_PADDING_X);
-        polygon.setLayoutY(BOARD_PADDING_Y);
-        polygon.getPoints().addAll(new Double[]{
-                event.getX(), event.getY() - 15.0,
-                event.getX() - 10.0, event.getY() - 5.0,
-                event.getX() - 10.0, event.getY() + 10.0,
-                event.getX() + 10.0, event.getY() + 10.0,
-                event.getX() + 10.0, event.getY() - 5.0,
-        });
-        boardPane.getChildren().addAll(polygon);
+        sendMessageToServer("dh:" + event.getX() + ":" + event.getY());
     }
 
     /**
@@ -440,7 +429,7 @@ public class GameController implements Initializable {
     private void initializeButtons() {
         rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
     }
-private void handleDiceRollMouseClick(MouseEvent event) {
+    private void handleDiceRollMouseClick(MouseEvent event) {
     sendMessageToServer("rd");
 }
 
@@ -480,5 +469,28 @@ private void handleDiceRollMouseClick(MouseEvent event) {
             toServerLabel.setText(toServerTextField.getText());
         }
 
+    }
+
+    public void drawHouse(String s) {
+        String[] messageArray = s.split(":");
+        Double eventX = Double.parseDouble(messageArray[1]);
+        Double eventY = Double.parseDouble(messageArray[2]);
+        String colorValue = messageArray[3];
+
+        Polygon polygon = new Polygon();
+        polygon.setFill(Color.valueOf(colorValue));
+        polygon.setStroke(Color.BLACK);
+        polygon.setLayoutX(BOARD_PADDING_X);
+        polygon.setLayoutY(BOARD_PADDING_Y);
+
+        polygon.getPoints().addAll(new Double[]{
+                eventX , eventY - 15.0,
+                eventX  - 10.0, eventY - 5.0,
+                eventX  - 10.0, eventY + 10.0,
+                eventX  + 10.0, eventY + 10.0,
+                eventX  + 10.0, eventY - 5.0,
+        });
+
+        boardPane.getChildren().addAll(polygon);
     }
 }

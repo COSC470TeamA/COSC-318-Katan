@@ -1,5 +1,6 @@
 package server;
 
+import client.Player;
 import controllers.ServerLogController;
 import javafx.application.Platform;
 import javafx.collections.ObservableArray;
@@ -22,7 +23,7 @@ public class GameServerThread extends Thread {
     private int PORT_NUM = 4445;
     String receivedMessage;
     ServerLogController serverLogController;
-    Map<Integer, Integer> clients = new TreeMap<>();
+    Map<Integer, Player> clients = new TreeMap<>();
     boolean victoryIsReached = false;
     int VICTORY_CONDITION = 4;
     Dice dice = new Dice();
@@ -61,7 +62,9 @@ public class GameServerThread extends Thread {
             // Receive
             receiveRequest(packet);
             String dString;
-            switch (receivedMessage) {
+
+            String[] receivedMessageArray = receivedMessage.split(":");
+            switch (receivedMessageArray[0]) {
                 case "P":
                     dString = "GOT P";
                     break;
@@ -70,6 +73,11 @@ public class GameServerThread extends Thread {
                     break;
                 case "rd":
                     dString = String.valueOf(dice.roll());
+                    break;
+                case "dh":
+                    //Add house to player who sent message
+                    //Tell all players to draw house with specific color to player who sent packet
+                    dString = receivedMessage + ":" + clients.get(packet.getPort()).getColor();
                     break;
                 case "":
                     dString = "Server received blank message";
@@ -101,9 +109,9 @@ public class GameServerThread extends Thread {
             receivedMessage = receivedMessage.substring(0, packet.getLength());
             System.out.println("SERVER LOG: " + "received message: " + receivedMessage + ": from port: " + packet.getPort());
 
-            // Add the player #, port # mapping
-            if (!clients.containsValue(packet.getPort())) {
-                clients.put(clients.size() + 1, packet.getPort());
+            // Add the player object, port # mapping
+            if (!clients.containsKey(packet.getPort())) {
+                clients.put(packet.getPort(), new Player());
             }
         } catch (IOException e) {
             e.printStackTrace();

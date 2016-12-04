@@ -83,10 +83,15 @@ public class GameClientThread extends Application {
         // Every time a change occurs in the label, the text is sent to the server
         gameController.getToServerLabel().textProperty().addListener((observable, oldValue, newValue) -> {
             sendRequest(newValue);
-            switch (newValue) {
+
+            String[] newValueArray = newValue.split(":");
+            switch (newValueArray[0]) {
                 case "rd":
                     // Set the dice label to display the roll from the server
                     gameController.getRollDiceLabel().setText(receiveRequest());
+                    break;
+                case "dh":
+                    gameController.drawHouse(receiveRequest());
                     break;
                 case "":
                     // If we have to clear the text field
