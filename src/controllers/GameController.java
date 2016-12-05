@@ -90,8 +90,8 @@ public class GameController implements Initializable {
     double SELECTION_CIRCLE_RADIUS = 10;
     double ROLL_MARKER_CIRCLE_RADIUS = 20;
 
-    double ROAD_RECTABGLE_HEIGHT = 47;
-    double ROAD_RECTABGLE_WIDTH = 8;
+    double ROAD_RECTABGLE_HEIGHT = 44;
+    double ROAD_RECTABGLE_WIDTH = 7;
 
     private FxSocketClient socket;
 
@@ -590,7 +590,7 @@ public class GameController implements Initializable {
         road.setY(eventY - SIDE_LENGTH / 2);
         road.setFill(Color.valueOf(colorValue));
         road.setStroke(Color.BLACK);
-        // Angles are 0, 60, 120, 180, 240, 300
+        // Angles are 120, 180, 240, 300, 0, 60
         road.setRotate(rotate);
 
         boardPane.getChildren().addAll(road);
