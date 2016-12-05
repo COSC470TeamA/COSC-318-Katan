@@ -46,6 +46,11 @@ public class GameServer {
 
         Thread listen = new Thread(){
             public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ie){
+                    ie.printStackTrace();
+                }
                 while(true){
                     String message = checkClientMessages();
                     if (message != null) {

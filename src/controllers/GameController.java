@@ -23,9 +23,7 @@ import socketfx.FxSocketClient;
 import socketfx.SocketListener;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class GameController implements Initializable {
 
@@ -446,7 +444,42 @@ public class GameController implements Initializable {
     }
 
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
+        //get tiles adjacent to house and send with message
+        ArrayList<Tile> surroundingTiles = getTilesSurrounding(event.getX(), event.getY());
+        String surroundingTilesMessage = "";
+        for(Tile tile : surroundingTiles) {
+            System.out.print(",{" + tile.getLogicalCoordinate().toString() + "}");
+        }
         sendMessageToServer("dh:" + event.getX() + ":" + event.getY());
+    }
+
+    private ArrayList<Tile> getTilesSurrounding(double x, double y) {
+        ArrayList<Tile> surroundingTiles = new ArrayList<>();
+
+        //make a map containing all coordinates for each tile in the game
+        Map<Tile, ArrayList<Coordinate>> allTilesList = new HashMap<>();
+        for(Tile tile : allTiles) {
+            ObservableList<Double> points = tile.getHex().getPoints();
+            ArrayList<Coordinate> tileVertices = new ArrayList<>(6);
+
+            // Put each vertex (pair of points) in the list
+            for (int i = 0; i < 12; i += 2) {
+                tileVertices.add(new Coordinate(points.get(i), points.get(i + 1)));
+            }
+            allTilesList.put(tile, tileVertices);
+        }
+
+        //check every tiles vertices to determine if house is being placed close to it
+        Coordinate currMouseCoord = new Coordinate(x, y);
+        for(Tile tile: allTilesList.keySet()) {
+            for (Coordinate coord : allTilesList.get(tile)) {
+                if (currMouseCoord.isCloseTo(coord)) {
+                    surroundingTiles.add(tile);
+                }
+            }
+        }
+
+        return surroundingTiles;
     }
 
     /**
@@ -596,6 +629,10 @@ public class GameController implements Initializable {
         boardPane.getChildren().addAll(road);
     }
 
+    private void initializeGame() {
+        //draw first house and road
+    }
+
     private void sendMessageToServer(String message) {
         if (toServerLabel.getText().equals(message)) {
             toServerLabel.setText("");
@@ -625,6 +662,9 @@ public class GameController implements Initializable {
                 //Add house to game board
                 drawHouse(receivedMessage);
                 break;
+            case "sg":
+                //start game
+                initializeGame();
             case "":
                 dString = "Client received blank message";
                 break;
