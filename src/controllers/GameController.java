@@ -448,9 +448,9 @@ public class GameController implements Initializable {
         ArrayList<Tile> surroundingTiles = getTilesSurrounding(event.getX(), event.getY());
         String surroundingTilesMessage = "";
         for(Tile tile : surroundingTiles) {
-            System.out.print(",{" + tile.getLogicalCoordinate().toString() + "}");
+            surroundingTilesMessage += tile.getLogicalCoordinate().toString() + "!";
         }
-        sendMessageToServer("dh:" + event.getX() + ":" + event.getY());
+        sendMessageToServer("dh:" + event.getX() + ":" + event.getY() + ":" + surroundingTilesMessage);
     }
 
     private ArrayList<Tile> getTilesSurrounding(double x, double y) {
@@ -588,7 +588,7 @@ public class GameController implements Initializable {
         String[] messageArray = s.split(":");
         Double eventX = Double.parseDouble(messageArray[1]);
         Double eventY = Double.parseDouble(messageArray[2]);
-        String colorValue = messageArray[3];
+        String colorValue = messageArray[4];
 
         Polygon polygon = new Polygon();
         polygon.setFill(Color.valueOf(colorValue));

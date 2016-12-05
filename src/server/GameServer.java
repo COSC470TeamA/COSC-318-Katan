@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by steve on 2016-11-09.
@@ -18,7 +20,7 @@ public class GameServer {
     boolean victoryIsReached = false;
     int VICTORY_CONDITION = 4;
 
-    private static final ArrayList<GameServerThread> clients = new ArrayList<>();
+    private static final List<GameServerThread> clients = Collections.synchronizedList(new ArrayList<GameServerThread>());
 
 
     public static void main(String[] args) throws Exception {

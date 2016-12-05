@@ -7,6 +7,8 @@ import javafx.collections.ObservableArray;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import models.Dice;
+import models.HexagonCoordinate;
+import models.House;
 import socketfx.Constants;
 import socketfx.FxSocketServer;
 import socketfx.SocketListener;
@@ -87,6 +89,7 @@ public class GameServerThread extends Thread {
                 case "dh":
                     //Add house to player who sent message
                     //Tell all players to draw house with specific color to player who sent packet
+                    addHouseToClient(receivedMessage);
                     setBroadcastMessage(receivedMessage + ":" + player.getColor());
                     break;
                 case "":
@@ -97,6 +100,22 @@ public class GameServerThread extends Thread {
                     setBroadcastMessage(receivedMessage);
                     break;
             }
+    }
+
+    private void addHouseToClient(String receivedMessage) {
+        String[] messageArray = receivedMessage.split(":");
+        String[] coords = messageArray[3].split("!");
+
+        ArrayList<HexagonCoordinate> coordinates = new ArrayList<>();
+
+        for(String coord : coords) {
+            String[] logicalCoord = coord.split(",");
+            int x = Integer.parseInt(logicalCoord[0]);
+            int y = Integer.parseInt(logicalCoord[1]);
+            coordinates.add(new HexagonCoordinate(x, y));
+        }
+
+        player.getHouses().add(new House(coordinates));
     }
 
     public void sendMessage(String msg) {
