@@ -80,7 +80,7 @@ public class GameController implements Initializable {
     double SELECTION_CIRCLE_RADIUS = 10;
     double ROLL_MARKER_CIRCLE_RADIUS = 20;
 
-    double ROAD_RECTABGLE_HEIGHT = 47;
+    double ROAD_RECTABGLE_HEIGHT = 42;
     double ROAD_RECTABGLE_WIDTH = 8;
 
     @Override
@@ -279,23 +279,35 @@ public class GameController implements Initializable {
                 break;
             }
         }
-        for (Coordinate vertex : tileMidPoints) {
-            if (currMouseCoord.isCloseTo(vertex)) {
-                showSelectionCircle(vertex, true);
-                break;
-            }
-        }
+
+        // @TODO wtf repeat much
+        Iterator<Coordinate> it = tileMidPoints.iterator();
+        Coordinate vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 120);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 0);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 60);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 120);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 0);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 60);
 
     }
+
     public void showSelectionCircle(Coordinate coord) {
         selectionCircle.setCenterX(coord.getX());
         selectionCircle.setCenterY(coord.getY());
         selectionCircle.setVisible(true);
     }
-    public void showSelectionCircle(Coordinate coord, boolean isSide) {
+
+    public void showSelectionCircle(Coordinate coord, boolean isSide, int degrees) {
         if (isSide) {
             selectionCircle2.setCenterX(coord.getX());
             selectionCircle2.setCenterY(coord.getY());
+            selectionCircle2.setRotate(degrees);
             selectionCircle2.setVisible(true);
         }
     }
@@ -332,9 +344,10 @@ public class GameController implements Initializable {
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleSelectionCircle2MouseClicked(MouseEvent event) {
-        roadRectangle.setX(event.getX() - ROAD_RECTABGLE_WIDTH / 2);
-        roadRectangle.setY(event.getY() - SIDE_LENGTH / 2);
-        roadRectangle.setVisible(true);
+//        roadRectangle.setX(event.getX() - ROAD_RECTABGLE_WIDTH / 2);
+//        roadRectangle.setY(event.getY() - SIDE_LENGTH / 2);
+//        roadRectangle.setVisible(true);
+        sendMessageToServer("dr:" + event.getX() + ":" + event.getY());
     }
 
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
@@ -471,6 +484,11 @@ public class GameController implements Initializable {
 
     }
 
+    /**
+     * Draws a house shaped polygon on the board at the coordiantes
+     * specified in the message received.
+     * @param s The message.
+     */
     public void drawHouse(String s) {
         String[] messageArray = s.split(":");
         Double eventX = Double.parseDouble(messageArray[1]);
@@ -483,14 +501,36 @@ public class GameController implements Initializable {
         polygon.setLayoutX(BOARD_PADDING_X);
         polygon.setLayoutY(BOARD_PADDING_Y);
 
-        polygon.getPoints().addAll(new Double[]{
+        polygon.getPoints().addAll(
                 eventX , eventY - 15.0,
                 eventX  - 10.0, eventY - 5.0,
                 eventX  - 10.0, eventY + 10.0,
                 eventX  + 10.0, eventY + 10.0,
-                eventX  + 10.0, eventY - 5.0,
-        });
+                eventX  + 10.0, eventY - 5.0
+        );
 
         boardPane.getChildren().addAll(polygon);
+    }
+
+    public void drawRoad(String message) {
+        String[] messageArray = message.split(":");
+        Double eventX = Double.parseDouble(messageArray[1]);
+        Double eventY = Double.parseDouble(messageArray[2]);
+        String colorValue = messageArray[3];
+
+        Rectangle road = new Rectangle();
+        road.setHeight(ROAD_RECTABGLE_HEIGHT);
+        road.setWidth(ROAD_RECTABGLE_WIDTH);
+        road.setLayoutX(BOARD_PADDING_X);
+        road.setLayoutY(BOARD_PADDING_Y);
+        road.setX(eventX - ROAD_RECTABGLE_WIDTH / 2);
+        road.setY(eventY - SIDE_LENGTH / 2);
+        road.setFill(Color.valueOf(colorValue));
+        road.setStroke(Color.BLACK);
+        // Angles are 0, 60, 120, 180, 240, 300
+        road.setRotate(selectionCircle2.getRotate());
+
+        boardPane.getChildren().addAll(road);
+
     }
 }

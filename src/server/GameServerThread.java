@@ -79,6 +79,9 @@ public class GameServerThread extends Thread {
                     //Tell all players to draw house with specific color to player who sent packet
                     dString = receivedMessage + ":" + clients.get(packet.getPort()).getColor();
                     break;
+                case "dr":
+                    dString = receivedMessage + ":" + clients.get(packet.getPort()).getColor();
+                    break;
                 case "":
                     dString = "Server received blank message";
                     break;

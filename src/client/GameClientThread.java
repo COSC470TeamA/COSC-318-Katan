@@ -93,6 +93,9 @@ public class GameClientThread extends Application {
                 case "dh":
                     gameController.drawHouse(receiveRequest());
                     break;
+                case "dr":
+                    gameController.drawRoad(receiveRequest());
+                    break;
                 case "":
                     // If we have to clear the text field
                     // receive the blank response so we don't get stuck
