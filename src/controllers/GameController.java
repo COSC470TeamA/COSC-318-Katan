@@ -51,7 +51,7 @@ public class GameController implements Initializable {
                      FXHex41, FXHex42, FXHex43;
 
     @FXML
-    Button rollDiceButton;
+    Button rollDiceButton, receiveButton;
 
     @FXML
     Label rollDiceLabel;
@@ -445,6 +445,10 @@ public class GameController implements Initializable {
     private void handleDiceRollMouseClick(MouseEvent event) {
     sendMessageToServer("rd");
 }
+
+    public Button getReceiveButton() {
+        return receiveButton;
+    }
 
     /**
      * Sends a message to the server thread.

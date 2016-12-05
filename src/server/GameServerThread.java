@@ -93,7 +93,8 @@ public class GameServerThread extends Thread {
             buf = dString.getBytes();
 
             // Send
-            sendResponse(packet, buf);
+            //sendResponse(packet, buf);
+            sendToAll(packet, buf);
         }
 
         datagramSocket.close();
@@ -130,6 +131,19 @@ public class GameServerThread extends Thread {
         packet = new DatagramPacket(buf, buf.length, address, port);
         try {
             datagramSocket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendToAll(DatagramPacket packet, byte[] buf) {
+        InetAddress address = packet.getAddress();
+        try {
+            // Send to all the clients!
+            for (Integer portnum : clients.keySet()) {
+                packet = new DatagramPacket(buf, buf.length, address, portnum);
+                datagramSocket.send(packet);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

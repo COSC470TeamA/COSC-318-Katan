@@ -81,6 +81,7 @@
                      <children>
                         <Button fx:id="rollDiceButton" mnemonicParsing="false" text="Roll Dice" />
                         <Label fx:id="rollDiceLabel" text="--" GridPane.columnIndex="1" />
+                        <Button fx:id="receiveButton" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="Receive" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children></Pane>

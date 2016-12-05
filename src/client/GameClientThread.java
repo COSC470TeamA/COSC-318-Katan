@@ -5,15 +5,14 @@ import controllers.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 
 /**
  * Created by steve on 2016-11-10.
@@ -83,7 +82,6 @@ public class GameClientThread extends Application {
         // Every time a change occurs in the label, the text is sent to the server
         gameController.getToServerLabel().textProperty().addListener((observable, oldValue, newValue) -> {
             sendRequest(newValue);
-
             String[] newValueArray = newValue.split(":");
             switch (newValueArray[0]) {
                 case "rd":
@@ -102,6 +100,10 @@ public class GameClientThread extends Application {
                     receiveRequest();
                     break;
             }
+
+
+            Button receiver = gameController.getReceiveButton();
+            receiver.setOnMouseClicked((event) -> handleReceiveButtonClick(event));
         });
 
     try {
@@ -117,11 +119,22 @@ public class GameClientThread extends Application {
         receiveRequest(packet);
 
 
+
+
     } catch (IOException e) {
         e.printStackTrace();
     }
-
-
+        Button receiver = gameController.getReceiveButton();
+        receiver.setOnMouseClicked((event) -> handleReceiveButtonClick(event));
+    }
+    private void handleReceiveButtonClick(MouseEvent event) {
+        // TESTING
+        try {
+            dsocket.setSoTimeout(1000);
+        } catch (SocketException e) {
+            System.err.println(e.toString());
+        }
+        receiveRequest();
     }
 
     private String receiveRequest(DatagramPacket packet) {
@@ -145,6 +158,7 @@ public class GameClientThread extends Application {
 
         return receivedMessage;
     }
+
     private String receiveRequest() {
         byte[] buf = new byte[256];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
