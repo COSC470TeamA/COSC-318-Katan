@@ -33,10 +33,8 @@ public class HexagonCoordinate {
 
     @Override
     public String toString() {
-        return "HexagonCoordinate{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return  x +
+                "," + y;
     }
 
 }

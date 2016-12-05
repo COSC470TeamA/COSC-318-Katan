@@ -9,25 +9,13 @@ import java.util.ArrayList;
  * Created by Bre on 2016-12-04.
  */
 public class House {
-    private Color color;
-    private Polygon polygon;
-    private ArrayList<Tile> tiles;
+    private ArrayList<HexagonCoordinate> tiles;
 
-    public House(Color color, Polygon polygon, ArrayList<Tile> tiles) {
-        this.color = color;
-        this.polygon = polygon;
+    public House(ArrayList<HexagonCoordinate> tiles) {
         this.tiles = tiles;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
-    public Polygon getPolygon() {
-        return polygon;
-    }
-
-    public ArrayList<Tile> getTiles() {
+    public ArrayList<HexagonCoordinate> getTiles() {
         return tiles;
     }
 }
