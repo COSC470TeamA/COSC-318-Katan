@@ -86,7 +86,7 @@ public class MainMenuController implements Initializable {
         try {
             GameServer.main(args);
 
-            new GameServerThread().start();
+
 
 
         } catch (Exception e) {

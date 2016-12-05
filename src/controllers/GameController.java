@@ -18,18 +18,18 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import models.*;
+import socketfx.Constants;
+import socketfx.FxSocketClient;
+import socketfx.SocketListener;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
 
-import static models.Resource.LUMBER;
-import static models.Resource.WOOL;
-
-
 public class GameController implements Initializable {
+
+
     /** The container for the game board */
     @FXML
     Pane boardPane;
@@ -59,6 +59,16 @@ public class GameController implements Initializable {
     @FXML
     Rectangle roadRectangle;
 
+    /**
+     * Label to put server bound messages in.
+     * The messages are automatically grabbed by the game client thread
+     * and forwarded to the server to be interpreted.
+     */
+    @FXML
+    Label toServerLabel;
+    @FXML
+    TextField toServerTextField;
+
     /** A list for all the tiles (hexagon shapes) on the board */
     ArrayList<Polygon> allHexagons = new ArrayList<>(19);
     /** A list for all the tiles (resources) on the board */
@@ -83,6 +93,79 @@ public class GameController implements Initializable {
     double ROAD_RECTABGLE_HEIGHT = 47;
     double ROAD_RECTABGLE_WIDTH = 8;
 
+    private FxSocketClient socket;
+
+    private boolean connected;
+    private volatile boolean isAutoConnected;
+
+    private static final int DEFAULT_RETRY_INTERVAL = 2000; // in milliseconds
+
+    /*
+     * Synchronized method set up to wait until there is no socket connection.
+     * When notifyDisconnected() is called, waiting will cease.
+     */
+    private synchronized void waitForDisconnect() {
+        while (connected) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+
+    /*
+     * Synchronized method responsible for notifying waitForDisconnect()
+     * method that it's OK to stop waiting.
+     */
+    private synchronized void notifyDisconnected() {
+        connected = false;
+        notifyAll();
+    }
+
+    /*
+     * Synchronized method to set isConnected boolean
+     */
+    private synchronized void setIsConnected(boolean connected) {
+        this.connected = connected;
+    }
+
+    /*
+     * Synchronized method to check for value of connected boolean
+     */
+    private synchronized boolean isConnected() {
+        return (connected);
+    }
+
+    private void connect() {
+        socket = new FxSocketClient(new GameController.FxSocketListener(),
+                "localhost",
+                4445,
+                Constants.instance().DEBUG_NONE);
+        socket.connect();
+    }
+
+    private void autoConnect() {
+        new Thread() {
+            @Override
+            public void run() {
+                while (isAutoConnected) {
+                    if (!isConnected()) {
+                        socket = new FxSocketClient(new GameController.FxSocketListener(),
+                                "localhost",
+                                4445,
+                                Constants.instance().DEBUG_NONE);
+                        socket.connect();
+                    }
+                    waitForDisconnect();
+                    try {
+                        Thread.sleep(DEFAULT_RETRY_INTERVAL * 1000);
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }
+        }.start();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -96,7 +179,10 @@ public class GameController implements Initializable {
 
         initializeButtons();
 
+        connect();
     }
+
+
     /**
      * Gets the stack of tile pieces to apply a Resource to each hexagon.
      */
@@ -281,10 +367,25 @@ public class GameController implements Initializable {
         }
         for (Coordinate vertex : tileMidPoints) {
             if (currMouseCoord.isCloseTo(vertex)) {
-                showSelectionCircle(vertex, true);
+                showSelectionCircle(vertex);
                 break;
             }
         }
+
+        // @TODO wtf repeat much
+        Iterator<Coordinate> it = tileMidPoints.iterator();
+        Coordinate vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 120);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 0);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 60);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 120);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 0);
+        vertex = it.next();
+        if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 60);
 
     }
     public void showSelectionCircle(Coordinate coord) {
@@ -296,6 +397,15 @@ public class GameController implements Initializable {
         if (isSide) {
             selectionCircle2.setCenterX(coord.getX());
             selectionCircle2.setCenterY(coord.getY());
+            selectionCircle2.setVisible(true);
+        }
+    }
+
+    public void showSelectionCircle(Coordinate coord, boolean isSide, int degrees) {
+        if (isSide) {
+            selectionCircle2.setCenterX(coord.getX());
+            selectionCircle2.setCenterY(coord.getY());
+            selectionCircle2.setRotate(degrees);
             selectionCircle2.setVisible(true);
         }
     }
@@ -332,9 +442,7 @@ public class GameController implements Initializable {
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleSelectionCircle2MouseClicked(MouseEvent event) {
-        roadRectangle.setX(event.getX() - ROAD_RECTABGLE_WIDTH / 2);
-        roadRectangle.setY(event.getY() - SIDE_LENGTH / 2);
-        roadRectangle.setVisible(true);
+        sendMessageToServer("dr:" + event.getX() + ":" + event.getY() + ":" + selectionCircle2.getRotate());
     }
 
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
@@ -349,8 +457,6 @@ public class GameController implements Initializable {
      * Refer to Hex.java for documentation on point mutation.
      */
     public void drawHexGrid() {
-
-
         // Top row
         hex.calculateVertices(FXHex01, new HexagonCoordinate(0, 1));
         hex.calculateVertices(FXHex02, new HexagonCoordinate(0, 2));
@@ -375,10 +481,6 @@ public class GameController implements Initializable {
         hex.calculateVertices(FXHex41, new HexagonCoordinate(4, 1));
         hex.calculateVertices(FXHex42, new HexagonCoordinate(4, 2));
         hex.calculateVertices(FXHex43, new HexagonCoordinate(4, 3));
-    }
-
-    public void drawRollMarkers() {
-
     }
 
     public HexagonCoordinate getCoords(Polygon hex) {
@@ -430,29 +532,8 @@ public class GameController implements Initializable {
         rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
     }
     private void handleDiceRollMouseClick(MouseEvent event) {
-    sendMessageToServer("rd");
-}
-
-    /**
-     * Sends a message to the server thread.
-     *
-     * @param message
-     */
-    private void sendMessageToServer(String message) {
-    if (toServerLabel.getText().equals(message)) {
-        toServerLabel.setText("");
+        sendMessageToServer("rd");
     }
-    toServerLabel.setText(message);
-}
-    /**
-     * Label to put server bound messages in.
-     * The messages are automatically grabbed by the game client thread
-     * and forwarded to the server to be interpreted.
-     */
-    @FXML
-    Label toServerLabel;
-    @FXML
-    TextField toServerTextField;
 
     public Label getToServerLabel() {
         return toServerLabel;
@@ -466,9 +547,8 @@ public class GameController implements Initializable {
      */
     public void handleToServerTextFieldKeyPressed(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
-            toServerLabel.setText(toServerTextField.getText());
+            sendMessageToServer(toServerTextField.getText());
         }
-
     }
 
     public void drawHouse(String s) {
@@ -492,5 +572,96 @@ public class GameController implements Initializable {
         });
 
         boardPane.getChildren().addAll(polygon);
+    }
+
+    public void drawRoad(String message) {
+        String[] messageArray = message.split(":");
+        Double eventX = Double.parseDouble(messageArray[1]);
+        Double eventY = Double.parseDouble(messageArray[2]);
+        Double rotate = Double.parseDouble(messageArray[3]);
+        String colorValue = messageArray[4];
+
+        Rectangle road = new Rectangle();
+        road.setHeight(ROAD_RECTABGLE_HEIGHT);
+        road.setWidth(ROAD_RECTABGLE_WIDTH);
+        road.setLayoutX(BOARD_PADDING_X);
+        road.setLayoutY(BOARD_PADDING_Y);
+        road.setX(eventX - ROAD_RECTABGLE_WIDTH / 2);
+        road.setY(eventY - SIDE_LENGTH / 2);
+        road.setFill(Color.valueOf(colorValue));
+        road.setStroke(Color.BLACK);
+        // Angles are 0, 60, 120, 180, 240, 300
+        road.setRotate(rotate);
+
+        boardPane.getChildren().addAll(road);
+    }
+
+    private void sendMessageToServer(String message) {
+        if (toServerLabel.getText().equals(message)) {
+            toServerLabel.setText("");
+        }
+        toServerLabel.setText(message);
+        sendRequest(message);
+    }
+
+    public void sendRequest(String message) {
+        socket.sendMessage(message);
+    }
+
+    public void handleMessage(String receivedMessage) {
+        String dString;
+
+        String[] receivedMessageArray = receivedMessage.split(":");
+        switch (receivedMessageArray[0]) {
+            case "rd":
+                //set dice rolled label
+                getRollDiceLabel().setText(receivedMessageArray[1]);
+                break;
+            case "dr":
+                //Add house to game board
+                drawRoad(receivedMessage);
+                break;
+            case "dh":
+                //Add house to game board
+                drawHouse(receivedMessage);
+                break;
+            case "":
+                dString = "Client received blank message";
+                break;
+            default:
+                // Figure out response
+                dString = "Message does not match cases";
+                break;
+        }
+    }
+
+    class FxSocketListener implements SocketListener {
+
+        @Override
+        public void onMessage(String line) {
+            if (line != null && !line.equals("")) {
+                System.out.println("Client received message - " + line);
+                handleMessage(line);
+            }
+        }
+
+        @Override
+        public void onClosedStatus(boolean isClosed) {
+            if (isClosed) {
+                notifyDisconnected();
+                if (isAutoConnected) {
+
+                } else {
+
+                }
+            } else {
+                setIsConnected(true);
+                if (isAutoConnected) {
+
+                } else {
+
+                }
+            }
+        }
     }
 }

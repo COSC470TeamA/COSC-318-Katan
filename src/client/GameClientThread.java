@@ -20,7 +20,6 @@ import java.net.UnknownHostException;
  */
 public class GameClientThread extends Application {
     Stage gameStage;
-    DatagramSocket dsocket;
     GameController gameController;
 
     public GameClientThread() throws IOException {
@@ -29,9 +28,6 @@ public class GameClientThread extends Application {
 
     public GameClientThread(String name) throws IOException {
         super();
-    }
-    public GameClientThread(Stage stage) throws Exception {
-        start(stage);
     }
 
     /**
@@ -63,123 +59,14 @@ public class GameClientThread extends Application {
             stage.setResizable(true);
             stage.setAlwaysOnTop(false);
 
-            // Constructor with no port number binds the DatagramSocket to any available port
-        dsocket = new DatagramSocket();
 
-        gameStage = stage;
-        stage.setAlwaysOnTop(false);
-        stage.show();
-
-            run();
+            gameStage = stage;
+            stage.setAlwaysOnTop(false);
+            stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-    public void run() {
-
-        // Add a change listener to the toServerLabel
-        // Every time a change occurs in the label, the text is sent to the server
-        gameController.getToServerLabel().textProperty().addListener((observable, oldValue, newValue) -> {
-            sendRequest(newValue);
-
-            String[] newValueArray = newValue.split(":");
-            switch (newValueArray[0]) {
-                case "rd":
-                    // Set the dice label to display the roll from the server
-                    gameController.getRollDiceLabel().setText(receiveRequest());
-                    break;
-                case "dh":
-                    gameController.drawHouse(receiveRequest());
-                    break;
-                case "":
-                    // If we have to clear the text field
-                    // receive the blank response so we don't get stuck
-                    receiveRequest();
-                    break;
-            }
-        });
-
-    try {
-        byte[] buf = new byte[256];
-
-        InetAddress address = InetAddress.getByName("localhost");
-        DatagramPacket packet = new DatagramPacket(buf, buf.length);
-
-        sendRequest("FROM CLIENT");
-
-        // get response
-        packet = new DatagramPacket(buf, buf.length);
-        receiveRequest(packet);
-
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-
-
-    }
-
-    private String receiveRequest(DatagramPacket packet) {
-        String receivedMessage = "";
-        try {
-            dsocket.receive(packet);
-
-
-        // display response
-        byte[] receivedBytes = packet.getData();
-        byte[] trimmed = new String(receivedBytes).trim().getBytes();
-
-
-            receivedMessage = new String(trimmed, "UTF-8");
-        receivedMessage.trim();
-        System.out.println("CLIENT SEES: " + receivedMessage);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return receivedMessage;
-    }
-    private String receiveRequest() {
-        byte[] buf = new byte[256];
-        DatagramPacket packet = new DatagramPacket(buf, buf.length);
-        // get response
-        packet = new DatagramPacket(buf, buf.length);
-        return receiveRequest(packet);
-    }
-    /**
-     * Send a message to the server.
-     *
-     * @param message The message to be sent.
-     */
-    public void sendRequest(String message) {
-        try {
-            sendRequest(message.getBytes(), message.length(), InetAddress.getByName("localhost"));
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-        if (message.startsWith("EXIT")) {
-            System.out.println("Client closed socket");
-            dsocket.close();
-        }
-    }
-
-    public void sendRequest(byte[] buf, int length, InetAddress address) {
-
-        try {
-        DatagramPacket packet = new DatagramPacket(buf, length, address, 4445);
-        packet.setLength(length);
-
-            dsocket.send(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-
 }

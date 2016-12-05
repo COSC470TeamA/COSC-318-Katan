@@ -7,31 +7,59 @@ import javafx.collections.ObservableArray;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import models.Dice;
+import socketfx.Constants;
+import socketfx.FxSocketServer;
+import socketfx.SocketListener;
 
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.util.*;
 
 /**
  * Created by steve on 2016-11-09.
  */
 public class GameServerThread extends Thread {
+    Socket client;
+    Dice dice;
+    Player player;
 
-    protected DatagramSocket datagramSocket;
-    private int PORT_NUM = 4445;
-    String receivedMessage;
-    ServerLogController serverLogController;
-    Map<Integer, Player> clients = new TreeMap<>();
-    boolean victoryIsReached = false;
-    int VICTORY_CONDITION = 4;
-    Dice dice = new Dice();
+    private String broadcastMessage;
+    private BufferedWriter output = null;
+    private BufferedReader input = null;
 
-    public GameServerThread() throws IOException {
+    public GameServerThread(Socket client, Player player) throws IOException {
         this("GameServerThread");
-    }
+        this.client = client;
+        this.player = player;
 
+        dice = new Dice();
+
+        if (client!= null && !client.isClosed()) {
+            input = new BufferedReader(new InputStreamReader(
+                    client.getInputStream()));
+            output = new BufferedWriter(new OutputStreamWriter(
+                    client.getOutputStream()));
+        }
+
+        Thread read = new Thread(){
+            public void run(){
+                while(true){
+                    try{
+                        String message = input.readLine();
+                        System.out.println("Server received message - " + message);
+                        handleMessage(message);
+                    }
+                    catch(IOException e){ e.printStackTrace(); }
+                }
+            }
+        };
+
+        read.setDaemon(true);
+        read.start();
+    }
 
     /**
      * Spawns a game server thread and attaches a socket.
@@ -40,27 +68,9 @@ public class GameServerThread extends Thread {
      */
     public GameServerThread(String name) throws IOException {
         super(name);
-        datagramSocket = new DatagramSocket(PORT_NUM);
     }
 
-    /**
-     * Listens for message coming in, determines a response and then
-     * sends the response.
-     *
-     * Automatically invoked on construction.
-     */
-    public void run() {
-        System.out.println("NEW SERVER THREAD RUNNING");
-
-
-
-        byte[] buf = new byte[256];
-        DatagramPacket packet = new DatagramPacket(buf, buf.length);
-
-        while (!victoryIsReached) {
-
-            // Receive
-            receiveRequest(packet);
+    public void handleMessage(String receivedMessage) {
             String dString;
 
             String[] receivedMessageArray = receivedMessage.split(":");
@@ -68,69 +78,43 @@ public class GameServerThread extends Thread {
                 case "P":
                     dString = "GOT P";
                     break;
-                case "FROM CLIENT":
-                    dString = "Server can see client";
+                case "dr":
+                    setBroadcastMessage(receivedMessage + ":" + player.getColor());
                     break;
                 case "rd":
-                    dString = String.valueOf(dice.roll());
+                    setBroadcastMessage(receivedMessage + ":" + String.valueOf(dice.roll()));
                     break;
                 case "dh":
                     //Add house to player who sent message
                     //Tell all players to draw house with specific color to player who sent packet
-                    dString = receivedMessage + ":" + clients.get(packet.getPort()).getColor();
+                    setBroadcastMessage(receivedMessage + ":" + player.getColor());
                     break;
                 case "":
                     dString = "Server received blank message";
                     break;
                 default:
                     // Figure out response
-                    dString = "Message does not match cases";
+                    setBroadcastMessage(receivedMessage);
                     break;
             }
-            buf = dString.getBytes();
-
-            // Send
-            sendResponse(packet, buf);
-        }
-
-        datagramSocket.close();
-        System.out.println("Server closed socket");
     }
 
-    private String receiveRequest(DatagramPacket packet) {
-        // Receive request
+    public void sendMessage(String msg) {
         try {
-            datagramSocket.receive(packet);
-
-            byte[] receivedBytes = packet.getData();
-            byte[] trimmed = new String(receivedBytes).trim().getBytes();
-            receivedMessage = new String(trimmed, "UTF-8");
-            receivedMessage.trim();
-            receivedMessage = receivedMessage.substring(0, packet.getLength());
-            System.out.println("SERVER LOG: " + "received message: " + receivedMessage + ": from port: " + packet.getPort());
-
-            // Add the player object, port # mapping
-            if (!clients.containsKey(packet.getPort())) {
-                clients.put(packet.getPort(), new Player());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return receivedMessage;
-    }
-
-    private void sendResponse(DatagramPacket packet, byte[] buf) {
-        // Send the response to the client at "address" and "port"
-        InetAddress address = packet.getAddress();
-        int port = packet.getPort();
-        packet = new DatagramPacket(buf, buf.length, address, port);
-        try {
-            datagramSocket.send(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
+            output.write(msg, 0, msg.length());
+            output.newLine();
+            output.flush();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
 
+    public String getBroadcastMessage() {
+        return broadcastMessage;
+    }
+
+    public void setBroadcastMessage(String broadcastMessage) {
+        this.broadcastMessage = broadcastMessage;
+    }
 }
