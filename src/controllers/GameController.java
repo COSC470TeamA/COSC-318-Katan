@@ -754,8 +754,6 @@ public class GameController implements Initializable {
                 initializeGame(receivedMessage);
                 break;
             case "et":
-//                endTurnButton.setDisable(!endTurnButton.isDisabled());
-//                rollDiceButton.setDisable(false);
                 if (isMyTurn)
                     isMyTurn = false;
                 else

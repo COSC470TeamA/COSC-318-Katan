@@ -13,7 +13,6 @@ public class PlayerColour {
     static ArrayList<Color> colours;
     public PlayerColour() {
         colours = new ArrayList<>(8);
-        colours.add(Color.AQUA);
         colours.add(Color.LIMEGREEN);
         colours.add(Color.CYAN);
         colours.add(Color.FUCHSIA);
