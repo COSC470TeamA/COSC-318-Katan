@@ -32,25 +32,31 @@ import java.util.*;
 public class GameController implements Initializable {
 
 
-    /** The container for the game board */
+    /**
+     * The container for the game board
+     */
     @FXML
     Pane boardPane;
 
-    /** Circle used to highlight the mouseover of vertices. */
+    /**
+     * Circle used to highlight the mouseover of vertices.
+     */
     @FXML
     Circle selectionCircle, selectionCircle2;
 
-    /** The polygons used to represent game tiles. */
+    /**
+     * The polygons used to represent game tiles.
+     */
     @FXML
-    Polygon          FXHex01, FXHex02, FXHex03,
+    Polygon FXHex01, FXHex02, FXHex03,
 
-                FXHex10, FXHex11, FXHex12, FXHex13,
+    FXHex10, FXHex11, FXHex12, FXHex13,
 
-            FXHex20, FXHex21, FXHex22, FXHex23, FXHex24,
+    FXHex20, FXHex21, FXHex22, FXHex23, FXHex24,
 
-                FXHex30, FXHex31, FXHex32, FXHex33,
+    FXHex30, FXHex31, FXHex32, FXHex33,
 
-                     FXHex41, FXHex42, FXHex43;
+    FXHex41, FXHex42, FXHex43;
 
     @FXML
     Button rollDiceButton, startGameButton, endTurnButton, buildHouseButton, buildRoadButton;
@@ -77,25 +83,39 @@ public class GameController implements Initializable {
     @FXML
     Label playerLabel;
 
-    /** A list for all the tiles (hexagon shapes) on the board */
+    /**
+     * A list for all the tiles (hexagon shapes) on the board
+     */
     ArrayList<Polygon> allHexagons = new ArrayList<>(19);
-    /** A list for all the tiles (resources) on the board */
+    /**
+     * A list for all the tiles (resources) on the board
+     */
     ArrayList<Tile> allTiles = new ArrayList<>(19);
 
-    /** Object with tools for calculating and mutating hexagon points */
+    /**
+     * Object with tools for calculating and mutating hexagon points
+     */
     Hex hex = new Hex();
 
-    /** The hand of cards that belongs to this game */
+    /**
+     * The hand of cards that belongs to this game
+     */
     Hand hand = new Hand();
 
 
-    /** The starting position of the hexes, relative to the upper left of their container */
+    /**
+     * The starting position of the hexes, relative to the upper left of their container
+     */
     double BOARD_PADDING_X, BOARD_PADDING_Y = 0;
 
-    /** The inital size of all edges of all tiles */
+    /**
+     * The inital size of all edges of all tiles
+     */
     double SIDE_LENGTH = 50;
 
-    /** The radius of the selection circle */
+    /**
+     * The radius of the selection circle
+     */
     double SELECTION_CIRCLE_RADIUS = 10;
     double ROLL_MARKER_CIRCLE_RADIUS = 20;
 
@@ -266,8 +286,8 @@ public class GameController implements Initializable {
                 Label markerLabel = new Label();
                 markerLabel.setText(String.valueOf(thisRollMarker.getRoll()));
                 stackPane.getChildren().addAll(markerCircle, markerLabel);
-                stackPane.setTranslateX(tileCoords.get(0).getX() - (SIDE_LENGTH/2) + (ROLL_MARKER_CIRCLE_RADIUS / 4));
-                stackPane.setTranslateY(tileCoords.get(0).getY() + (SIDE_LENGTH/2));
+                stackPane.setTranslateX(tileCoords.get(0).getX() - (SIDE_LENGTH / 2) + (ROLL_MARKER_CIRCLE_RADIUS / 4));
+                stackPane.setTranslateY(tileCoords.get(0).getY() + (SIDE_LENGTH / 2));
                 stackPane.setLayoutX(BOARD_PADDING_X);
                 stackPane.setLayoutY(BOARD_PADDING_Y);
                 boardPane.getChildren().addAll(stackPane);
@@ -317,8 +337,7 @@ public class GameController implements Initializable {
                     // Don't pop a marker if resource is desert
                     // There are no markers on the desert
                     tile = new Tile(coord, thisHex, nextResource, null);
-                }
-                else {
+                } else {
                     tile = new Tile(coord, thisHex, nextResource, rollMarkerIterator.next());
                 }
                 allTiles.add(tile);
@@ -349,6 +368,7 @@ public class GameController implements Initializable {
 
     /**
      * Invoked on mouse click on one of the game tiles.
+     *
      * @param event
      */
     public void handleTileClick(MouseEvent event) {
@@ -362,6 +382,7 @@ public class GameController implements Initializable {
 
     /**
      * Invoked on mouse move in a game tile.
+     *
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleMouseMove(MouseEvent event) {
@@ -409,11 +430,13 @@ public class GameController implements Initializable {
         if (currMouseCoord.isCloseTo(vertex)) showSelectionCircle(vertex, true, 60);
 
     }
+
     public void showSelectionCircle(Coordinate coord) {
         selectionCircle.setCenterX(coord.getX());
         selectionCircle.setCenterY(coord.getY());
         selectionCircle.setVisible(true);
     }
+
     public void showSelectionCircle(Coordinate coord, boolean isSide) {
         if (isSide) {
             selectionCircle2.setCenterX(coord.getX());
@@ -434,6 +457,7 @@ public class GameController implements Initializable {
 
     /**
      * Invoked on mouse enter of a game tile.
+     *
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleMouseEnter(MouseEvent event) {
@@ -443,6 +467,7 @@ public class GameController implements Initializable {
 
     /**
      * Invoked on mouse exit of a game tile.
+     *
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleMouseExit(MouseEvent event) {
@@ -451,16 +476,20 @@ public class GameController implements Initializable {
 
     /**
      * Invoked on mouse exit of the selection circle.
+     *
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleSelectionCircleMouseExit(MouseEvent event) {
         selectionCircle.setVisible(false);
     }
+
     public void handleSelectionCircle2MouseExit(MouseEvent event) {
         selectionCircle2.setVisible(false);
     }
+
     /**
      * Invoked on mouse click of the side selection circle.
+     *
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleSelectionCircle2MouseClicked(MouseEvent event) {
@@ -489,7 +518,7 @@ public class GameController implements Initializable {
         //get tiles adjacent to house and send with message
         ArrayList<Tile> surroundingTiles = getTilesSurrounding(x, y);
         String surroundingTilesMessage = "";
-        for(Tile tile : surroundingTiles) {
+        for (Tile tile : surroundingTiles) {
             RollMarker rollMarker = getRollMarker(tile.getLogicalCoordinate());
             Resource resource = getResource(tile.getLogicalCoordinate());
 
@@ -499,6 +528,7 @@ public class GameController implements Initializable {
         }
         sendMessageToServer("dh:" + x + ":" + y + ":" + surroundingTilesMessage);
     }
+
     public void buildRoadAt(double x, double y) {
         sendMessageToServer("dr:" + x + ":" + y + ":" + selectionCircle2.getRotate());
     }
@@ -506,16 +536,18 @@ public class GameController implements Initializable {
     public void buildVerticalRoadAt(double x, double y) {
         sendMessageToServer("dr:" + x + ":" + y + ":" + 0);
     }
+
     public void buildUpRoadAt(double x, double y) {
         sendMessageToServer("dr:" + x + ":" + y + ":" + 60);
     }
+
     public void buildDownRoadAt(double x, double y) {
         sendMessageToServer("dr:" + x + ":" + y + ":" + 120);
     }
 
     private Resource getResource(HexagonCoordinate logicalCoordinate) {
-        for(Tile tile : allTiles) {
-            if(tile.getLogicalCoordinate() == logicalCoordinate){
+        for (Tile tile : allTiles) {
+            if (tile.getLogicalCoordinate() == logicalCoordinate) {
                 return tile.getResource();
             }
         }
@@ -523,8 +555,8 @@ public class GameController implements Initializable {
     }
 
     private RollMarker getRollMarker(HexagonCoordinate logicalCoordinate) {
-        for(Tile tile : allTiles) {
-            if(tile.getLogicalCoordinate() == logicalCoordinate){
+        for (Tile tile : allTiles) {
+            if (tile.getLogicalCoordinate() == logicalCoordinate) {
                 return tile.getRollMarker();
             }
         }
@@ -536,7 +568,7 @@ public class GameController implements Initializable {
 
         //make a map containing all coordinates for each tile in the game
         Map<Tile, ArrayList<Coordinate>> allTilesList = new HashMap<>();
-        for(Tile tile : allTiles) {
+        for (Tile tile : allTiles) {
             ObservableList<Double> points = tile.getHex().getPoints();
             ArrayList<Coordinate> tileVertices = new ArrayList<>(6);
 
@@ -549,7 +581,7 @@ public class GameController implements Initializable {
 
         //check every tiles vertices to determine if house is being placed close to it
         Coordinate currMouseCoord = new Coordinate(x, y);
-        for(Tile tile: allTilesList.keySet()) {
+        for (Tile tile : allTilesList.keySet()) {
             for (Coordinate coord : allTilesList.get(tile)) {
                 if (currMouseCoord.isCloseTo(coord)) {
                     surroundingTiles.add(tile);
@@ -564,7 +596,7 @@ public class GameController implements Initializable {
      * Send each polygon (hex) to the Hex tools class to have its
      * set of points mutated.
      * Each has has 6 vertices with with 2 points each, so 12 points.
-     *
+     * <p>
      * Refer to Hex.java for documentation on point mutation.
      */
     public void drawHexGrid() {
@@ -632,7 +664,7 @@ public class GameController implements Initializable {
         }
         // The first and last rows do not have a 0th hexagon
         if (row == 0 || row == 4) {
-            col --;
+            col--;
         }
         arrayIndex += col;
 
@@ -650,6 +682,7 @@ public class GameController implements Initializable {
         buildHouseButton.setOnMouseClicked(this::handleBuildHouseButtonClick);
         buildRoadButton.setOnMouseClicked(this::handleBuildRoadButtonClick);
     }
+
     private void handleDiceRollMouseClick(MouseEvent event) {
         // Turn off the roll dice button
         rollDiceButton.setDisable(true);
@@ -666,18 +699,34 @@ public class GameController implements Initializable {
         startTurn();
     }
 
+    int sleepAmount = 500;
+
     private void initializeStartingPlayerHousesAndRoads() {
-        buildUpRoadAt(107.29, 88.15);
-        buildVerticalRoadAt(259.20, 275.0);
-        buildHouseAt(130.20, 75.0);
-        buildHouseAt(260.20, 249.0);
+        try {
+            buildUpRoadAt(107.29, 88.15);
+            Thread.sleep(sleepAmount);
+            buildVerticalRoadAt(259.20, 275.0);
+            Thread.sleep(sleepAmount);
+            buildHouseAt(130.20, 75.0);
+            Thread.sleep(sleepAmount);
+            buildHouseAt(260.20, 249.0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeSecondPlayerBuildings() {
-        buildDownRoadAt(65.25, 237.03);
-        buildDownRoadAt(194.24, 162.44);
-        buildHouseAt(176.20, 149.0);
-        buildHouseAt(88.20, 248.0);
+        try {
+            buildDownRoadAt(65.25, 237.03);
+            Thread.sleep(sleepAmount);
+            buildDownRoadAt(194.24, 162.44);
+            Thread.sleep(sleepAmount);
+            buildHouseAt(176.20, 149.0);
+            Thread.sleep(sleepAmount);
+            buildHouseAt(88.20, 248.0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleEndTurnButton(MouseEvent event) {
@@ -739,11 +788,14 @@ public class GameController implements Initializable {
         return toServerLabel;
     }
 
-    public Label getRollDiceLabel() { return rollDiceLabel; }
+    public Label getRollDiceLabel() {
+        return rollDiceLabel;
+    }
 
     /**
      * When the Enter key is pressed, sets the toServerLabel text
      * to be the text in this Text Field.
+     *
      * @param event
      */
     public void handleToServerTextFieldKeyPressed(KeyEvent event) {
@@ -765,11 +817,11 @@ public class GameController implements Initializable {
         polygon.setLayoutY(BOARD_PADDING_Y);
 
         polygon.getPoints().addAll(
-                eventX , eventY - 15.0,
-                eventX  - 10.0, eventY - 5.0,
-                eventX  - 10.0, eventY + 10.0,
-                eventX  + 10.0, eventY + 10.0,
-                eventX  + 10.0, eventY - 5.0
+                eventX, eventY - 15.0,
+                eventX - 10.0, eventY - 5.0,
+                eventX - 10.0, eventY + 10.0,
+                eventX + 10.0, eventY + 10.0,
+                eventX + 10.0, eventY - 5.0
         );
         boardPane.getChildren().addAll(polygon);
     }
@@ -884,7 +936,7 @@ public class GameController implements Initializable {
         int lumber = 0;
         int ore = 0;
         int grain = 0;
-        for(Card card : hand.getHand()) {
+        for (Card card : hand.getHand()) {
             switch (Resource.valueOf(card.getResource().name())) {
                 case BRICK:
                     brick++;
