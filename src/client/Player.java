@@ -15,7 +15,7 @@ public class Player {
     private Hand hand;
     private ArrayList<House> houses;
     private Color color;
-    private boolean isMyTurn;
+    private boolean isMyTurn = false;
 
     public Player() {
         //this.color = getRandomColor();
@@ -47,5 +47,11 @@ public class Player {
         return hand;
     }
 
+    public boolean isMyTurn() {
+        return isMyTurn;
+    }
+    public void setMyTurn(boolean myTurn) {
+        isMyTurn = myTurn;
+    }
 }
 

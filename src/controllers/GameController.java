@@ -570,9 +570,13 @@ public class GameController implements Initializable {
         sendMessageToServer("rd");
     }
     private void handleStartGameButton(MouseEvent event) {
+        turnLabel.setText("Your turn");
+        startGameButton.setDisable(true);
         sendMessageToServer("sg");
     }
     private void handleEndTurnButton(MouseEvent event) {
+        turnLabel.setText("Waiting for players");
+        endTurnButton.setDisable(true);
         sendMessageToServer("et");
     }
 
@@ -637,6 +641,7 @@ public class GameController implements Initializable {
     }
 
     private void initializeGame() {
+        startGameButton.setDisable(true);
         //draw first house and road
     }
 
