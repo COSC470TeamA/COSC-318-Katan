@@ -2,6 +2,7 @@ package server;
 
 import client.Player;
 import controllers.ServerLogController;
+import models.PlayerColour;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,7 +16,6 @@ import java.util.List;
  */
 public class GameServer {
     private ServerSocket socket;
-
     //Map<Integer, Player> clients = new TreeMap<>();
     boolean victoryIsReached = false;
     int VICTORY_CONDITION = 4;
