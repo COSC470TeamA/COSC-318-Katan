@@ -450,9 +450,30 @@ public class GameController implements Initializable {
         ArrayList<Tile> surroundingTiles = getTilesSurrounding(event.getX(), event.getY());
         String surroundingTilesMessage = "";
         for(Tile tile : surroundingTiles) {
-            surroundingTilesMessage += tile.getLogicalCoordinate().toString() + "!";
+            RollMarker rollMarker = getRollMarker(tile.getLogicalCoordinate());
+            Resource resource = getResource(tile.getLogicalCoordinate());
+
+            surroundingTilesMessage += "!" + tile.getLogicalCoordinate().toString() + "^" + rollMarker.getRoll() + "," + resource.name();
         }
         sendMessageToServer("dh:" + event.getX() + ":" + event.getY() + ":" + surroundingTilesMessage);
+    }
+
+    private Resource getResource(HexagonCoordinate logicalCoordinate) {
+        for(Tile tile : allTiles) {
+            if(tile.getLogicalCoordinate() == logicalCoordinate){
+                return tile.getResource();
+            }
+        }
+        return null;
+    }
+
+    private RollMarker getRollMarker(HexagonCoordinate logicalCoordinate) {
+        for(Tile tile : allTiles) {
+            if(tile.getLogicalCoordinate() == logicalCoordinate){
+                return tile.getRollMarker();
+            }
+        }
+        return null;
     }
 
     private ArrayList<Tile> getTilesSurrounding(double x, double y) {

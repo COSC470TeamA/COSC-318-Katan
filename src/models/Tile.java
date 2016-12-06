@@ -31,6 +31,13 @@ public class Tile extends ResourceType {
         this.rollMarker = rollMarker;
     }
 
+    public Tile(HexagonCoordinate logicalCoordinate, Resource resource, RollMarker rollMarker) {
+        this.logicalCoordinate = logicalCoordinate;
+        this.hex = new Polygon();
+        this.resource = resource;
+        this.rollMarker = rollMarker;
+    }
+
     public HexagonCoordinate getLogicalCoordinate() {
         return logicalCoordinate;
     }
