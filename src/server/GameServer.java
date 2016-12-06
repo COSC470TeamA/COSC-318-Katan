@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class GameServer {
     boolean victoryIsReached = false;
-    int VICTORY_CONDITION = 4;
+
 
     private static final List<GameServerThread> clients = Collections.synchronizedList(new ArrayList<GameServerThread>());
 

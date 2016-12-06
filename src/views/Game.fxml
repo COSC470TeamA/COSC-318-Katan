@@ -105,12 +105,12 @@
                         </GridPane>
                      </children>
                   </Pane>
-                  <Pane prefHeight="150.0" prefWidth="526.0">
+                  <Pane prefHeight="169.0" prefWidth="316.0">
                      <children>
-                        <GridPane layoutX="77.0" prefHeight="180.0" prefWidth="485.0">
+                        <GridPane layoutX="12.0" prefHeight="180.0" prefWidth="290.0">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="135.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="367.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="143.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="147.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -126,12 +126,19 @@
                                <Button fx:id="startGameButton" mnemonicParsing="false" text="Start Game" GridPane.rowIndex="1" />
                                <Label fx:id="turnLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Button fx:id="endTurnButton" layoutX="10.0" layoutY="42.0" mnemonicParsing="false" text="End Turn" GridPane.rowIndex="2" />
-                               <Button fx:id="buildHouseButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build House" GridPane.rowIndex="3"/>
-                               <Button fx:id="buildRoadButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build Road" GridPane.rowIndex="4"/>
+                               <Button fx:id="buildHouseButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build House" GridPane.rowIndex="3" />
+                               <Button fx:id="buildRoadButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build Road" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                      </children>
                   </Pane>
+                   <Pane prefHeight="169.0" prefWidth="230.0">
+                       <children>
+                           <Label fx:id="gameWinLabel" layoutX="-3.0" prefHeight="66.0" prefWidth="230.0" text="">
+                               <font>
+                                   <Font size="45.0" />
+                               </font></Label>
+                       </children></Pane>
                </children>
             </HBox>
          </children></VBox>

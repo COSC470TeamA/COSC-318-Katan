@@ -30,6 +30,8 @@ public class GameServerThread extends Thread {
     private BufferedWriter output = null;
     private BufferedReader input = null;
 
+    private int VICTORY_CONDITION = 4;
+
     public GameServerThread(Socket client, Player player) throws IOException {
         this("GameServerThread");
         this.client = client;
@@ -93,7 +95,15 @@ public class GameServerThread extends Thread {
                 case "et":
                     // Tell everyone that this player ended their turn
                     player.setMyTurn(false);
-                    setBroadcastMessage(receivedMessage);
+                    boolean gameWon = checkGameWin();
+
+                    if (gameWon) {
+                        setBroadcastMessage("gw");
+                    } else {
+                        setBroadcastMessage(receivedMessage);
+                    }
+
+                    break;
                 case "":
                     dString = "Server received blank message";
                     break;
@@ -102,6 +112,16 @@ public class GameServerThread extends Thread {
                     setBroadcastMessage(receivedMessage);
                     break;
             }
+    }
+
+
+    private boolean checkGameWin() {
+        if (player.getHouses().size() >= VICTORY_CONDITION) {
+            //victory reached
+            sendMessage("vr");
+            return true;
+        }
+        return false;
     }
 
     public void addHouseToClient(String receivedMessage) {
