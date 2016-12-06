@@ -4,6 +4,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -23,6 +25,7 @@ import socketfx.Constants;
 import socketfx.FxSocketClient;
 import socketfx.SocketListener;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.*;
 
@@ -50,7 +53,7 @@ public class GameController implements Initializable {
                      FXHex41, FXHex42, FXHex43;
 
     @FXML
-    Button rollDiceButton, startGameButton, endTurnButton;
+    Button rollDiceButton, startGameButton, endTurnButton, buildHouseButton, buildRoadButton;
 
     @FXML
     Label rollDiceLabel, turnLabel;
@@ -428,24 +431,6 @@ public class GameController implements Initializable {
 
     }
 
-    public void buildHousesWithRobot() {
-        Bounds bounds = boardPane.getBoundsInLocal();
-        Bounds screenBounds = boardPane.localToScreen(bounds);
-        int x = (int) screenBounds.getMinX();
-        int y = (int) screenBounds.getMinY();
-
-        StartingPositions startingPositions = StartingPositions.getInstance();
-
-        Coordinate c = startingPositions.getMouseEvent();
-        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
-        c = startingPositions.getMouseEvent();
-        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
-        c = startingPositions.getMouseEvent();
-        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
-        c = startingPositions.getMouseEvent();
-        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
-
-    }
     /**
      * Invoked on mouse enter of a game tile.
      * @param event The Mouse Event which invoked this listener.
@@ -645,9 +630,13 @@ public class GameController implements Initializable {
     private void initializeButtons() {
         endTurnButton.setDisable(true);
         rollDiceButton.setDisable(true);
+        buildHouseButton.setDisable(true); // Enabled for testing
+        buildRoadButton.setDisable(true);
         rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
         startGameButton.setOnMouseClicked((event) -> handleStartGameButton(event));
         endTurnButton.setOnMouseClicked((event) -> handleEndTurnButton(event));
+        buildHouseButton.setOnMouseClicked((event) -> handleBuildHouseButtonClick(event));
+        buildRoadButton.setOnMouseClicked((event) -> handleBuildRoadButtonClick(event));
     }
     private void handleDiceRollMouseClick(MouseEvent event) {
         // Turn off the roll dice button
@@ -658,14 +647,18 @@ public class GameController implements Initializable {
     }
 
     private void handleStartGameButton(MouseEvent event) {
-        buildUpRoadAt(107.29, 88.15);
-        buildVerticalRoadAt(259.20, 275.0);
-        buildHouseAt(130.20, 75.0);
-        buildHouseAt(260.20, 249.0);
+        initializeStartingPlayerHousesAndRoads();
         sendMessageToServer("sg");
         // Turn off the start game button for the rest of the game
         startGameButton.setDisable(true);
         startTurn();
+    }
+
+    private void initializeStartingPlayerHousesAndRoads() {
+        buildUpRoadAt(107.29, 88.15);
+        buildVerticalRoadAt(259.20, 275.0);
+        buildHouseAt(130.20, 75.0);
+        buildHouseAt(260.20, 249.0);
     }
 
     private void handleEndTurnButton(MouseEvent event) {
@@ -678,7 +671,35 @@ public class GameController implements Initializable {
         rollDiceButton.setDisable(true);
         // Turn off the end turn button
         endTurnButton.setDisable(true);
+        // Turn off the builder buttons
+        buildRoadButton.setDisable(true);
+        buildHouseButton.setDisable(true);
+    }
 
+    private void handleBuildHouseButtonClick(MouseEvent event) {
+        System.out.println(hand.canAffordHouse());
+        buildHouseButton.setDisable(true);
+        // Remove the right cards from the player
+        hand.removeHouseCards();
+        // Reset the builder buttons based on what can be afforded
+        refreshAfterBuilding();
+    }
+
+    private void handleBuildRoadButtonClick(MouseEvent event) {
+        System.out.println(hand.canAffordRoad());
+        buildRoadButton.setDisable(true);
+        hand.removeRoadCards();
+        refreshAfterBuilding();
+    }
+
+    private void refreshAfterBuilding() {
+        enableAffordableBuilderButtons();
+        updateHandText();
+    }
+
+    private void enableAffordableBuilderButtons() {
+        buildHouseButton.setDisable(!hand.canAffordHouse());
+        buildRoadButton.setDisable(!hand.canAffordRoad());
     }
 
     public void startTurn() {
@@ -791,10 +812,14 @@ public class GameController implements Initializable {
         switch (receivedMessageArray[0]) {
             case "ir":
                 incrementResource(receivedMessage);
+                // If it's your turn, after getting resources check for building
+                if (isMyTurn) enableAffordableBuilderButtons();
                 break;
             case "rd":
                 //set dice rolled label
                 getRollDiceLabel().setText(receivedMessageArray[1]);
+                // If it's your turn, after the roll dice check for building
+                if (isMyTurn) enableAffordableBuilderButtons();
                 break;
             case "dr":
                 //Add house to game board
