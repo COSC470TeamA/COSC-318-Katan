@@ -98,6 +98,8 @@ public class GameController implements Initializable {
 
     private static final int DEFAULT_RETRY_INTERVAL = 2000; // in milliseconds
 
+    private boolean isMyTurn = false;
+
     /*
      * Synchronized method set up to wait until there is no socket connection.
      * When notifyDisconnected() is called, waiting will cease.
@@ -583,27 +585,54 @@ public class GameController implements Initializable {
     }
 
     private void initializeButtons() {
+        endTurnButton.setDisable(true);
+        rollDiceButton.setDisable(true);
         rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
         startGameButton.setOnMouseClicked((event) -> handleStartGameButton(event));
         endTurnButton.setOnMouseClicked((event) -> handleEndTurnButton(event));
     }
     private void handleDiceRollMouseClick(MouseEvent event) {
+        // Turn off the roll dice button
+        rollDiceButton.setDisable(true);
+        // Turn on the end turn button
+        endTurnButton.setDisable(false);
         sendMessageToServer("rd");
     }
+
     private void handleStartGameButton(MouseEvent event) {
-        turnLabel.setText("Your turn");
-        startGameButton.setDisable(true);
         sendMessageToServer("sg");
+        // Turn off the start game button for the rest of the game
+        startGameButton.setDisable(true);
+        startTurn();
     }
+
     private void handleEndTurnButton(MouseEvent event) {
-        turnLabel.setText("Waiting for players");
-        //endTurnButton.setDisable(true);
+
         sendMessageToServer("et");
+
+        turnLabel.setText("Waiting for players");
+
+        // Turn off the roll dice button
+        rollDiceButton.setDisable(true);
+        // Turn off the end turn button
+        endTurnButton.setDisable(true);
+
+    }
+
+    public void startTurn() {
+        System.out.println("STARTING TURN");
+        isMyTurn = true;
+        // Set the label to describe who's turn it is
+        turnLabel.setText("Your turn");
+
+        // Turn on the Roll Dice button
+        rollDiceButton.setDisable(false);
     }
 
     public Label getToServerLabel() {
         return toServerLabel;
     }
+
     public Label getRollDiceLabel() { return rollDiceLabel; }
 
     /**
@@ -700,7 +729,13 @@ public class GameController implements Initializable {
                 initializeGame();
                 break;
             case "et":
-                endTurnButton.setDisable(!endTurnButton.isDisabled());
+//                endTurnButton.setDisable(!endTurnButton.isDisabled());
+//                rollDiceButton.setDisable(false);
+                if (isMyTurn)
+                    isMyTurn = false;
+                else
+                    startTurn();
+
             case "":
                 dString = "Client received blank message";
                 break;
