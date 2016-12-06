@@ -632,11 +632,11 @@ public class GameController implements Initializable {
         rollDiceButton.setDisable(true);
         buildHouseButton.setDisable(true); // Enabled for testing
         buildRoadButton.setDisable(true);
-        rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
-        startGameButton.setOnMouseClicked((event) -> handleStartGameButton(event));
-        endTurnButton.setOnMouseClicked((event) -> handleEndTurnButton(event));
-        buildHouseButton.setOnMouseClicked((event) -> handleBuildHouseButtonClick(event));
-        buildRoadButton.setOnMouseClicked((event) -> handleBuildRoadButtonClick(event));
+        rollDiceButton.setOnMouseClicked(this::handleDiceRollMouseClick);
+        startGameButton.setOnMouseClicked(this::handleStartGameButton);
+        endTurnButton.setOnMouseClicked(this::handleEndTurnButton);
+        buildHouseButton.setOnMouseClicked(this::handleBuildHouseButtonClick);
+        buildRoadButton.setOnMouseClicked(this::handleBuildRoadButtonClick);
     }
     private void handleDiceRollMouseClick(MouseEvent event) {
         // Turn off the roll dice button
@@ -659,6 +659,13 @@ public class GameController implements Initializable {
         buildVerticalRoadAt(259.20, 275.0);
         buildHouseAt(130.20, 75.0);
         buildHouseAt(260.20, 249.0);
+    }
+
+    private void initializeSecondPlayerBuildings() {
+        buildDownRoadAt(65.25, 237.03);
+        buildDownRoadAt(194.24, 162.44);
+        buildHouseAt(176.20, 149.0);
+        buildHouseAt(88.20, 248.0);
     }
 
     private void handleEndTurnButton(MouseEvent event) {
@@ -779,10 +786,7 @@ public class GameController implements Initializable {
         if (!isMyTurn) {
             // Initialize starting houses for person who
             // did not hit the start game button
-            buildDownRoadAt(65.25, 237.03);
-            buildDownRoadAt(194.24, 162.44);
-            buildHouseAt(176.20, 149.0);
-            buildHouseAt(88.20, 248.0);
+            initializeSecondPlayerBuildings();
         }
         setPlayerColor(receivedMessage);
         setIntitalResources();
