@@ -690,6 +690,19 @@ public class GameController implements Initializable {
 
         toServerTextField.setVisible(false);
         toServerLabel.setVisible(false);
+
+        boardPane.setOnMouseClicked(this::handleMouseClickBoardPane);
+    }
+
+    private void handleMouseClickBoardPane(MouseEvent event) {
+        if (buildingAHouse) {
+            buildingAHouse = false;
+            buildHouseButton.setDisable(false);
+        }
+        else if (buildingARoad) {
+            buildingARoad = false;
+            buildRoadButton.setDisable(false);
+        }
     }
 
     private void handleDiceRollMouseClick(MouseEvent event) {
