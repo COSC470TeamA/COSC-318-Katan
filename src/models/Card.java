@@ -6,5 +6,8 @@ package models;
 public class Card extends ResourceType {
 
 
+    public Resource getResource() {
+        return this.resource;
+    }
 
 }

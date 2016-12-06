@@ -54,7 +54,7 @@ public class GameController implements Initializable {
                      FXHex41, FXHex42, FXHex43;
 
     @FXML
-    Button rollDiceButton, startGameButton, endTurnButton, buildHouseButton;
+    Button rollDiceButton, startGameButton, endTurnButton, buildHouseButton, buildRoadButton;
 
     @FXML
     Label rollDiceLabel, turnLabel;
@@ -642,6 +642,7 @@ public class GameController implements Initializable {
         startGameButton.setOnMouseClicked((event) -> handleStartGameButton(event));
         endTurnButton.setOnMouseClicked((event) -> handleEndTurnButton(event));
         buildHouseButton.setOnMouseClicked((event) -> handleBuildHouseButtonClick(event));
+        buildRoadButton.setOnMouseClicked((event) -> handleBuildRoadButtonClick(event));
     }
     private void handleDiceRollMouseClick(MouseEvent event) {
         // Turn off the roll dice button
@@ -652,14 +653,18 @@ public class GameController implements Initializable {
     }
 
     private void handleStartGameButton(MouseEvent event) {
-        buildUpRoadAt(107.29, 88.15);
-        buildVerticalRoadAt(259.20, 275.0);
-        buildHouseAt(130.20, 75.0);
-        buildHouseAt(260.20, 249.0);
+        initializeStartingPlayerHousesAndRoads();
         sendMessageToServer("sg");
         // Turn off the start game button for the rest of the game
         startGameButton.setDisable(true);
         startTurn();
+    }
+
+    private void initializeStartingPlayerHousesAndRoads() {
+        buildUpRoadAt(107.29, 88.15);
+        buildVerticalRoadAt(259.20, 275.0);
+        buildHouseAt(130.20, 75.0);
+        buildHouseAt(260.20, 249.0);
     }
 
     private void handleEndTurnButton(MouseEvent event) {
@@ -675,6 +680,10 @@ public class GameController implements Initializable {
     }
 
     private void handleBuildHouseButtonClick(MouseEvent event) {
+        System.out.println(hand.canAffordHouse());
+    }
+
+    private void handleBuildRoadButtonClick(MouseEvent event) {
 
     }
 
