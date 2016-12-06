@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -24,6 +26,7 @@ import socketfx.Constants;
 import socketfx.FxSocketClient;
 import socketfx.SocketListener;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.*;
 
@@ -51,7 +54,7 @@ public class GameController implements Initializable {
                      FXHex41, FXHex42, FXHex43;
 
     @FXML
-    Button rollDiceButton, startGameButton, endTurnButton;
+    Button rollDiceButton, startGameButton, endTurnButton, buildHouseButton;
 
     @FXML
     Label rollDiceLabel, turnLabel;
@@ -429,24 +432,6 @@ public class GameController implements Initializable {
 
     }
 
-    public void buildHousesWithRobot() {
-        Bounds bounds = boardPane.getBoundsInLocal();
-        Bounds screenBounds = boardPane.localToScreen(bounds);
-        int x = (int) screenBounds.getMinX();
-        int y = (int) screenBounds.getMinY();
-
-        StartingPositions startingPositions = StartingPositions.getInstance();
-
-        Coordinate c = startingPositions.getMouseEvent();
-        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
-        c = startingPositions.getMouseEvent();
-        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
-        c = startingPositions.getMouseEvent();
-        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
-        c = startingPositions.getMouseEvent();
-        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
-
-    }
     /**
      * Invoked on mouse enter of a game tile.
      * @param event The Mouse Event which invoked this listener.
@@ -652,9 +637,11 @@ public class GameController implements Initializable {
     private void initializeButtons() {
         endTurnButton.setDisable(true);
         rollDiceButton.setDisable(true);
+        //buildHouseButton.setDisable(true); // Enabled for testing
         rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
         startGameButton.setOnMouseClicked((event) -> handleStartGameButton(event));
         endTurnButton.setOnMouseClicked((event) -> handleEndTurnButton(event));
+        buildHouseButton.setOnMouseClicked((event) -> handleBuildHouseButtonClick(event));
     }
     private void handleDiceRollMouseClick(MouseEvent event) {
         // Turn off the roll dice button
@@ -685,6 +672,9 @@ public class GameController implements Initializable {
         rollDiceButton.setDisable(true);
         // Turn off the end turn button
         endTurnButton.setDisable(true);
+    }
+
+    private void handleBuildHouseButtonClick(MouseEvent event) {
 
     }
 
