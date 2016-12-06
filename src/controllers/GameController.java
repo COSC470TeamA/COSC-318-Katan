@@ -916,6 +916,7 @@ public class GameController implements Initializable {
                 break;
             case "gw":
                 setWin(false);
+                break;
             case "et":
                 if (isMyTurn)
                     isMyTurn = false;
