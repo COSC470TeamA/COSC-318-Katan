@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 /**
@@ -46,15 +47,14 @@ public class GameServer {
 
         Thread listen = new Thread(){
             public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ie){
-                    ie.printStackTrace();
-                }
                 while(true){
-                    String message = checkClientMessages();
-                    if (message != null) {
-                        sendToAllClients(message);
+                    try {
+                        String message = checkClientMessages();
+                        if (message != null) {
+                            sendToAllClients(message);
+                        }
+                    } catch (ConcurrentModificationException cme) {
+                        cme.printStackTrace();
                     }
                 }
             }
