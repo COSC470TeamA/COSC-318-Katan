@@ -28,4 +28,8 @@ public class Hand {
     public boolean contains(Card card) {
         return hand.contains(card);
     }
+
+    public ArrayList<Card> getHand() {
+        return hand;
+    }
 }
