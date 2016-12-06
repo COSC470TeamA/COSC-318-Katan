@@ -3,6 +3,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -20,8 +22,9 @@
       <VBox prefHeight="657.0" prefWidth="918.0">
          <children>
             <Pane prefHeight="92.0" prefWidth="657.0">
+
                <children>
-                  <GridPane prefHeight="75.0" prefWidth="475.0">
+                  <GridPane prefHeight="242.0" prefWidth="475.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.0" minWidth="10.0" prefWidth="329.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="146.0" />
@@ -32,6 +35,7 @@
                       <RowConstraints maxHeight="36.0" minHeight="0.0" prefHeight="23.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
+
                         <Label fx:id="toServerLabel" text="12" />
                         <TextField fx:id="toServerTextField" GridPane.rowIndex="1" />
                      </children>
@@ -66,6 +70,7 @@
                    <Circle fx:id="selectionCircle" fill="#d9edff" layoutX="207.0" layoutY="141.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
                    <Circle fx:id="selectionCircle2" fill="#d9edff" layoutX="207.0" layoutY="141.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
                    <Rectangle fx:id="roadRectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutY="-17.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+
                </children>
             </Pane>
             <HBox>
@@ -76,6 +81,13 @@
                            <font>
                               <Font size="45.0" />
                            </font></Label>
+
+                         <ImageView fx:id="costs" fitHeight="150.0" fitWidth="200.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+                             <image>
+                                 <Image fx:id="costsImage" url="@../assets/images/buildingcosts.jpg" />
+                             </image>
+                         </ImageView>
+
                      </children></Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -134,6 +146,7 @@
                                <Button fx:id="buildRoadButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build Road" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
+
                      </children>
                   </Pane>
                    <Pane prefHeight="169.0" prefWidth="230.0">
@@ -142,6 +155,7 @@
                                <font>
                                    <Font size="45.0" />
                                </font></Label>
+
                        </children></Pane>
                </children>
             </HBox>

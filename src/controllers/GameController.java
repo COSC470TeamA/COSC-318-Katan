@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -85,6 +86,12 @@ public class GameController implements Initializable {
 
     @FXML
     Label gameWinLabel;
+
+    @FXML
+    ImageView costs;
+
+    @FXML
+            Image costsImage;
 
     /**
      * A list for all the tiles (hexagon shapes) on the board
@@ -692,6 +699,12 @@ public class GameController implements Initializable {
         toServerLabel.setVisible(false);
 
         boardPane.setOnMouseClicked(this::handleMouseClickBoardPane);
+
+        costs.toFront();
+//        costs.setLayoutX(20);
+//        costs.setLayoutY(20);
+//        costs.setX(20);
+//        costs.setY(20);
     }
 
     private void handleMouseClickBoardPane(MouseEvent event) {
