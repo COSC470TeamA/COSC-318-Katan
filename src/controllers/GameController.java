@@ -1,6 +1,5 @@
 package controllers;
 
-import com.sun.tools.javadoc.Start;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -479,23 +478,14 @@ public class GameController implements Initializable {
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleSelectionCircle2MouseClicked(MouseEvent event) {
-        sendMessageToServer("dr:" + event.getX() + ":" + event.getY() + ":" + selectionCircle2.getRotate());
+        boolean canBuyRoad = false;
+        if (canBuyRoad) {
+            sendMessageToServer("dr:" + event.getX() + ":" + event.getY() + ":" + selectionCircle2.getRotate());
+        }
     }
 
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
-        //get tiles adjacent to house and send with message
-        System.out.println(event.getX() + " " + event.getY());
-        ArrayList<Tile> surroundingTiles = getTilesSurrounding(event.getX(), event.getY());
-        String surroundingTilesMessage = "";
-        for(Tile tile : surroundingTiles) {
-            RollMarker rollMarker = getRollMarker(tile.getLogicalCoordinate());
-            Resource resource = getResource(tile.getLogicalCoordinate());
-
-            surroundingTilesMessage += "!" + tile.getLogicalCoordinate().toString() + "^" + rollMarker.getRoll() + "," + resource.name();
-        }
-        sendMessageToServer("dh:" + event.getX() + ":" + event.getY() + ":" + surroundingTilesMessage);
-
-
+        buildHouseAt(event.getX(), event.getY());
     }
 
     public void buildHouseAt(double x, double y) {
@@ -506,13 +496,16 @@ public class GameController implements Initializable {
             RollMarker rollMarker = getRollMarker(tile.getLogicalCoordinate());
             Resource resource = getResource(tile.getLogicalCoordinate());
 
-            surroundingTilesMessage += "!" + tile.getLogicalCoordinate().toString() + "^" + rollMarker.getRoll() + "," + resource.name();
+            if (resource != Resource.DESERT) {
+                surroundingTilesMessage += "!" + tile.getLogicalCoordinate().toString() + "^" + rollMarker.getRoll() + "," + resource.name();
+            }
         }
         sendMessageToServer("dh:" + x + ":" + y + ":" + surroundingTilesMessage);
     }
     public void buildRoadAt(double x, double y) {
         sendMessageToServer("dr:" + x + ":" + y + ":" + selectionCircle2.getRotate());
     }
+
     public void buildVerticalRoadAt(double x, double y) {
         sendMessageToServer("dr:" + x + ":" + y + ":" + 0);
     }
@@ -776,7 +769,7 @@ public class GameController implements Initializable {
 
     private void setPlayerColor(String receivedMessage) {
         String[] message = receivedMessage.split(":");
-        playerLabel.setTextFill(Color.valueOf(message[2]));
+        playerLabel.setTextFill(Color.valueOf(message[1]));
     }
 
     private void sendMessageToServer(String message) {

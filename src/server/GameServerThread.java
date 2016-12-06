@@ -93,7 +93,7 @@ public class GameServerThread extends Thread {
                 case "et":
                     // Tell everyone that this player ended their turn
                     player.setMyTurn(false);
-                    setBroadcastMessage(receivedMessage + ":" + player.getColor());
+                    setBroadcastMessage(receivedMessage);
                 case "":
                     dString = "Server received blank message";
                     break;
