@@ -687,6 +687,9 @@ public class GameController implements Initializable {
         endTurnButton.setOnMouseClicked(this::handleEndTurnButton);
         buildHouseButton.setOnMouseClicked(this::handleBuildHouseButtonClick);
         buildRoadButton.setOnMouseClicked(this::handleBuildRoadButtonClick);
+
+        toServerTextField.setVisible(false);
+        toServerLabel.setVisible(false);
     }
 
     private void handleDiceRollMouseClick(MouseEvent event) {
@@ -856,7 +859,7 @@ public class GameController implements Initializable {
 
     private void initializeGame(String receivedMessage) {
         startGameButton.setDisable(true);
-
+        startGameButton.setVisible(false);
         if (!isMyTurn) {
             // Initialize starting houses for person who
             // did not hit the start game button

@@ -110,9 +110,9 @@
 
                         <GridPane layoutX="77.0" prefHeight="180.0" prefWidth="430.0">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="110.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="120.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="104.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="156.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="109.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="63.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="104.0" />
 
                           </columnConstraints>
@@ -125,10 +125,10 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Button fx:id="rollDiceButton" mnemonicParsing="false" text="Roll Dice" GridPane.rowIndex="0" />
-                              <Label fx:id="rollDiceLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                               <Button fx:id="startGameButton" mnemonicParsing="false" text="Start Game" GridPane.rowIndex="1" />
-                               <Label fx:id="turnLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Button fx:id="rollDiceButton" mnemonicParsing="false" text="Roll Dice" GridPane.rowIndex="1" />
+                              <Label fx:id="rollDiceLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                               <Button fx:id="startGameButton" mnemonicParsing="false" text="Start Game" GridPane.rowIndex="0" />
+                               <Label fx:id="turnLabel" text="" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                               <Button fx:id="endTurnButton" layoutX="10.0" layoutY="42.0" mnemonicParsing="false" text="End Turn" GridPane.rowIndex="2" />
                                <Button fx:id="buildHouseButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build House" GridPane.rowIndex="3" />
                                <Button fx:id="buildRoadButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build Road" GridPane.rowIndex="4" />
