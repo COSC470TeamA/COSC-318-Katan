@@ -6,9 +6,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableArray;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import models.Dice;
-import models.HexagonCoordinate;
-import models.House;
+import models.*;
 import socketfx.Constants;
 import socketfx.FxSocketServer;
 import socketfx.SocketListener;
@@ -108,18 +106,30 @@ public class GameServerThread extends Thread {
     public void addHouseToClient(String receivedMessage) {
         try {
             String[] messageArray = receivedMessage.split(":");
-            String[] coords = messageArray[3].split("!");
+            String[] tiles = messageArray[3].split("!");
 
-            ArrayList<HexagonCoordinate> coordinates = new ArrayList<>();
+            ArrayList<Tile> tilesList = new ArrayList<>();
 
-            for (String coord : coords) {
-                String[] logicalCoord = coord.split(",");
-                int x = Integer.parseInt(logicalCoord[0]);
-                int y = Integer.parseInt(logicalCoord[1]);
-                coordinates.add(new HexagonCoordinate(x, y));
+            for (String tile : tiles) {
+                if (!tile.equals("")) {
+                    String[] tileInfo = tile.split("\\^");
+
+                    String[] logicalCoord = tileInfo[0].split(",");
+                    int x = Integer.parseInt(logicalCoord[0]);
+                    int y = Integer.parseInt(logicalCoord[1]);
+
+                    String[] info = tileInfo[1].split(",");
+                    int rollMarker = Integer.parseInt(info[0]);
+                    String resource = info[1];
+
+                    HexagonCoordinate hexCoord = (new HexagonCoordinate(x, y));
+
+                    tilesList.add(new Tile(hexCoord, Resource.valueOf(resource), new RollMarker(rollMarker)));
+                }
             }
 
-            player.getHouses().add(new House(coordinates));
+            player.getHouses().add(new House(tilesList));
+
         } catch (ArrayIndexOutOfBoundsException oob) {
             oob.printStackTrace();
         }
