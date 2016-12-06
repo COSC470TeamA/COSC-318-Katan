@@ -105,20 +105,24 @@ public class GameServerThread extends Thread {
             }
     }
 
-    private void addHouseToClient(String receivedMessage) {
-        String[] messageArray = receivedMessage.split(":");
-        String[] coords = messageArray[3].split("!");
+    public void addHouseToClient(String receivedMessage) {
+        try {
+            String[] messageArray = receivedMessage.split(":");
+            String[] coords = messageArray[3].split("!");
 
-        ArrayList<HexagonCoordinate> coordinates = new ArrayList<>();
+            ArrayList<HexagonCoordinate> coordinates = new ArrayList<>();
 
-        for(String coord : coords) {
-            String[] logicalCoord = coord.split(",");
-            int x = Integer.parseInt(logicalCoord[0]);
-            int y = Integer.parseInt(logicalCoord[1]);
-            coordinates.add(new HexagonCoordinate(x, y));
+            for (String coord : coords) {
+                String[] logicalCoord = coord.split(",");
+                int x = Integer.parseInt(logicalCoord[0]);
+                int y = Integer.parseInt(logicalCoord[1]);
+                coordinates.add(new HexagonCoordinate(x, y));
+            }
+
+            player.getHouses().add(new House(coordinates));
+        } catch (ArrayIndexOutOfBoundsException oob) {
+            oob.printStackTrace();
         }
-
-        player.getHouses().add(new House(coordinates));
     }
 
     public void sendMessage(String msg) {
