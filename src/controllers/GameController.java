@@ -67,6 +67,12 @@ public class GameController implements Initializable {
     @FXML
     TextField toServerTextField;
 
+    @FXML
+    Label lumberCountLabel, woolCountLabel, brickCountLabel, grainCountLabel, oreCountLabel;
+
+    @FXML
+    Label playerLabel;
+
     /** A list for all the tiles (hexagon shapes) on the board */
     ArrayList<Polygon> allHexagons = new ArrayList<>(19);
     /** A list for all the tiles (resources) on the board */
@@ -77,6 +83,7 @@ public class GameController implements Initializable {
 
     /** The hand of cards that belongs to this game */
     Hand hand = new Hand();
+
 
     /** The starting position of the hexes, relative to the upper left of their container */
     double BOARD_PADDING_X, BOARD_PADDING_Y = 0;
@@ -180,6 +187,15 @@ public class GameController implements Initializable {
         initializeButtons();
 
         connect();
+    }
+
+    private void setIntitalResources() {
+        for (Resource resource : Resource.values()) {
+            Card card = new Card();
+            card.setResource(resource);
+            hand.addCard(card);
+        }
+        updateHandText();
     }
 
 
@@ -690,9 +706,15 @@ public class GameController implements Initializable {
         boardPane.getChildren().addAll(road);
     }
 
-    private void initializeGame() {
+    private void initializeGame(String receivedMessage) {
         startGameButton.setDisable(true);
-        //draw first house and road
+        setPlayerColor(receivedMessage);
+        setIntitalResources();
+    }
+
+    private void setPlayerColor(String receivedMessage) {
+        String[] message = receivedMessage.split(":");
+        playerLabel.setTextFill(Color.valueOf(message[2]));
     }
 
     private void sendMessageToServer(String message) {
@@ -712,6 +734,9 @@ public class GameController implements Initializable {
 
         String[] receivedMessageArray = receivedMessage.split(":");
         switch (receivedMessageArray[0]) {
+            case "ir":
+                incrementResource(receivedMessage);
+                break;
             case "rd":
                 //set dice rolled label
                 getRollDiceLabel().setText(receivedMessageArray[1]);
@@ -726,7 +751,7 @@ public class GameController implements Initializable {
                 break;
             case "sg":
                 //start game
-                initializeGame();
+                initializeGame(receivedMessage);
                 break;
             case "et":
 //                endTurnButton.setDisable(!endTurnButton.isDisabled());
@@ -744,6 +769,48 @@ public class GameController implements Initializable {
                 dString = "Message does not match cases";
                 break;
         }
+    }
+
+
+    private void incrementResource(String receivedMessage) {
+        String[] message = receivedMessage.split(":");
+        Card card = new Card();
+        card.setResource(Resource.valueOf(message[1]));
+        hand.addCard(card);
+        updateHandText();
+    }
+
+    private void updateHandText() {
+        int brick = 0;
+        int wool = 0;
+        int lumber = 0;
+        int ore = 0;
+        int grain = 0;
+        for(Card card : hand.getHand()) {
+            switch (Resource.valueOf(card.getResource().name())) {
+                case BRICK:
+                    brick++;
+                    break;
+                case WOOL:
+                    wool++;
+                    break;
+                case LUMBER:
+                    lumber++;
+                    break;
+                case ORE:
+                    ore++;
+                    break;
+                case GRAIN:
+                    grain++;
+                    break;
+            }
+        }
+
+        brickCountLabel.setText(String.valueOf(brick));
+        woolCountLabel.setText(String.valueOf(wool));
+        lumberCountLabel.setText(String.valueOf(lumber));
+        oreCountLabel.setText(String.valueOf(ore));
+        grainCountLabel.setText(String.valueOf(grain));
     }
 
     class FxSocketListener implements SocketListener {

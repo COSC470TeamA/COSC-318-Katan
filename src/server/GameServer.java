@@ -2,7 +2,10 @@ package server;
 
 import client.Player;
 import controllers.ServerLogController;
+import models.Card;
+import models.House;
 import models.PlayerColour;
+import models.Tile;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -86,10 +89,36 @@ public class GameServer {
             gameStarted = true;
             initializeGame();
             return;
+        } else if (message.startsWith("rd")) {
+            dollOutResources(message);
         }
 
         for(GameServerThread client : clients) {
-            client.sendMessage(message);
+            if (message.startsWith("sg")) {
+                client.sendMessage(message + ":" + client.player.getColor());
+            } else  {
+                client.sendMessage(message);
+            }
+        }
+    }
+
+    private static void dollOutResources(String message) {
+        int roll = Integer.valueOf(message.split(":")[1]);
+
+        for(GameServerThread client: clients) {
+            for (House house : client.player.getHouses()) {
+                for (Tile tile : house.getTiles()) {
+                    if (tile.getRollMarker().getRoll() == roll) {
+                        //player this resource to player hand
+                        Card card = new Card();
+                        card.setResource(tile.getResource());
+                        client.player.getHand().addCard(card);
+
+                        //tell client to increment resources in gui
+                        client.sendMessage("ir:" + card.getResource().name());
+                    }
+                }
+            }
         }
     }
 
