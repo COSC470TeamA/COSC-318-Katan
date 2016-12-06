@@ -34,7 +34,7 @@ public class MainMenuController implements Initializable {
 
     public void createGameButtonHandler(ActionEvent event) {
         // Code for creating a game goes here
-
+        createGameButton.setDisable(true);
         // Start a server thread for the game
         startServerConnection();
         // Start a client connection
