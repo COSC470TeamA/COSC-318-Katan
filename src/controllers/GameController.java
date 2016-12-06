@@ -576,7 +576,7 @@ public class GameController implements Initializable {
     }
     private void handleEndTurnButton(MouseEvent event) {
         turnLabel.setText("Waiting for players");
-        endTurnButton.setDisable(true);
+        //endTurnButton.setDisable(true);
         sendMessageToServer("et");
     }
 
@@ -677,6 +677,9 @@ public class GameController implements Initializable {
             case "sg":
                 //start game
                 initializeGame();
+                break;
+            case "et":
+                endTurnButton.setDisable(!endTurnButton.isDisabled());
             case "":
                 dString = "Client received blank message";
                 break;
