@@ -910,13 +910,9 @@ public class GameController implements Initializable {
                     isMyTurn = false;
                 else
                     startTurn();
-
-            case "":
-                dString = "Client received blank message";
                 break;
             default:
-                // Figure out response
-                dString = "Message does not match cases";
+                System.out.println("Message does not match cases");
                 break;
         }
     }
