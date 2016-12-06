@@ -89,11 +89,14 @@ public class GameServerThread extends Thread {
                     addHouseToClient(receivedMessage);
                     setBroadcastMessage(receivedMessage + ":" + player.getColor());
                     break;
+                case "et":
+                    // Tell everyone that this player ended their turn
+                    setBroadcastMessage(receivedMessage + "");
                 case "":
                     dString = "Server received blank message";
                     break;
                 default:
-                    // Figure out response
+                    // Just send it back!
                     setBroadcastMessage(receivedMessage);
                     break;
             }

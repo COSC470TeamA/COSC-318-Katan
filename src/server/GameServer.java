@@ -2,6 +2,7 @@ package server;
 
 import client.Player;
 import controllers.ServerLogController;
+import models.PlayerColour;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class GameServer {
     private static boolean gameStarted = false;
+    private ServerSocket socket;
     boolean victoryIsReached = false;
     int VICTORY_CONDITION = 4;
 

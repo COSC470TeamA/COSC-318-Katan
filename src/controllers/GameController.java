@@ -49,7 +49,7 @@ public class GameController implements Initializable {
                      FXHex41, FXHex42, FXHex43;
 
     @FXML
-    Button rollDiceButton, startGameButton;
+    Button rollDiceButton, startGameButton, endTurnButton;
 
     @FXML
     Label rollDiceLabel, turnLabel;
@@ -564,12 +564,16 @@ public class GameController implements Initializable {
     private void initializeButtons() {
         rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
         startGameButton.setOnMouseClicked((event) -> handleStartGameButton(event));
+        endTurnButton.setOnMouseClicked((event) -> handleEndTurnButton(event));
     }
     private void handleDiceRollMouseClick(MouseEvent event) {
         sendMessageToServer("rd");
     }
     private void handleStartGameButton(MouseEvent event) {
         sendMessageToServer("sg");
+    }
+    private void handleEndTurnButton(MouseEvent event) {
+        sendMessageToServer("et");
     }
 
     public Label getToServerLabel() {
@@ -607,7 +611,6 @@ public class GameController implements Initializable {
                 eventX  + 10.0, eventY + 10.0,
                 eventX  + 10.0, eventY - 5.0
         );
-
         boardPane.getChildren().addAll(polygon);
     }
 

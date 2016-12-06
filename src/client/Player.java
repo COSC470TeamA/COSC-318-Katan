@@ -3,6 +3,7 @@ package client;
 import javafx.scene.paint.Color;
 import models.Hand;
 import models.House;
+import models.PlayerColour;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,9 +15,11 @@ public class Player {
     private Hand hand;
     private ArrayList<House> houses;
     private Color color;
+    private boolean isMyTurn;
 
     public Player() {
-        this.color = getRandomColor();
+        //this.color = getRandomColor();
+        this.color = PlayerColour.getPlayColour();
         this.houses = new ArrayList<>();
         this.hand = new Hand();
     }

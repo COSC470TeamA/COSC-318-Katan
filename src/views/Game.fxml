@@ -82,10 +82,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="rollDiceButton" mnemonicParsing="false" text="Roll Dice"  GridPane.rowIndex="0"/>
-                        <Label fx:id="rollDiceLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                         <Button fx:id="startGameButton" mnemonicParsing="false" text="Start Game" GridPane.rowIndex="1"/>
-                         <Label fx:id="turnLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Button fx:id="rollDiceButton" mnemonicParsing="false" text="Roll Dice" GridPane.rowIndex="0" />
+                        <Label fx:id="rollDiceLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                         <Button fx:id="startGameButton" mnemonicParsing="false" text="Start Game" GridPane.rowIndex="1" />
+                         <Label fx:id="turnLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="endTurnButton" layoutX="10.0" layoutY="42.0" mnemonicParsing="false" text="End Turn" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </children></Pane>
