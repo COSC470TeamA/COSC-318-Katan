@@ -110,6 +110,7 @@ public class GameController implements Initializable {
     private static final int DEFAULT_RETRY_INTERVAL = 2000; // in milliseconds
 
     private boolean isMyTurn = false;
+    private boolean buildingAHouse = false, buildingARoad = false;
 
     /*
      * Synchronized method set up to wait until there is no socket connection.
@@ -463,14 +464,25 @@ public class GameController implements Initializable {
      * @param event The Mouse Event which invoked this listener.
      */
     public void handleSelectionCircle2MouseClicked(MouseEvent event) {
-        boolean canBuyRoad = false;
-        if (canBuyRoad) {
+        if (buildingARoad) {
             sendMessageToServer("dr:" + event.getX() + ":" + event.getY() + ":" + selectionCircle2.getRotate());
+            // Remove the right cards from the player
+            hand.removeRoadCards();
         }
+        buildingARoad = false;
+        // Reset the builder buttons based on what can be afforded
+        refreshAfterBuilding();
     }
 
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
-        buildHouseAt(event.getX(), event.getY());
+        if (buildingAHouse) {
+            buildHouseAt(event.getX(), event.getY());
+            // Remove the right cards from the player
+            hand.removeHouseCards();
+        }
+        buildingAHouse = false;
+        // Reset the builder buttons based on what can be afforded
+        refreshAfterBuilding();
     }
 
     public void buildHouseAt(double x, double y) {
@@ -681,22 +693,26 @@ public class GameController implements Initializable {
         // Turn off the builder buttons
         buildRoadButton.setDisable(true);
         buildHouseButton.setDisable(true);
+        // Make sure they can't build out of turn
+        buildingARoad = false;
+        buildingAHouse = false;
     }
 
     private void handleBuildHouseButtonClick(MouseEvent event) {
         System.out.println(hand.canAffordHouse());
         buildHouseButton.setDisable(true);
-        // Remove the right cards from the player
-        hand.removeHouseCards();
-        // Reset the builder buttons based on what can be afforded
-        refreshAfterBuilding();
+
+
+        // Start the building a house phase
+        buildingAHouse = true;
     }
 
     private void handleBuildRoadButtonClick(MouseEvent event) {
         System.out.println(hand.canAffordRoad());
         buildRoadButton.setDisable(true);
-        hand.removeRoadCards();
-        refreshAfterBuilding();
+
+        // Start the building a road phase
+        buildingARoad = true;
     }
 
     private void refreshAfterBuilding() {
