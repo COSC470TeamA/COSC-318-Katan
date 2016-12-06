@@ -1,5 +1,7 @@
 package models;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.util.ArrayList;
 
 /**
@@ -29,6 +31,28 @@ public class Hand {
 
     public boolean removeCard(Card card) {
         return hand.remove(card);
+    }
+
+    private boolean removeCard(Resource resource) {
+        for (Card c : hand) {
+            if (c.getResource().equals(resource)) {
+                hand.remove(c);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeHouseCards() {
+        removeCard(Resource.BRICK);
+        removeCard(Resource.LUMBER);
+        removeCard(Resource.WOOL);
+        removeCard(Resource.GRAIN);
+    }
+
+    public void removeRoadCards() {
+        removeCard(Resource.BRICK);
+        removeCard(Resource.LUMBER);
     }
 
     public int getHandSize() {

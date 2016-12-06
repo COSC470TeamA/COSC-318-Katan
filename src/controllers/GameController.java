@@ -686,10 +686,23 @@ public class GameController implements Initializable {
 
     private void handleBuildHouseButtonClick(MouseEvent event) {
         System.out.println(hand.canAffordHouse());
+        buildHouseButton.setDisable(true);
+        // Remove the right cards from the player
+        hand.removeHouseCards();
+        // Reset the builder buttons based on what can be afforded
+        refreshAfterBuilding();
     }
 
     private void handleBuildRoadButtonClick(MouseEvent event) {
         System.out.println(hand.canAffordRoad());
+        buildRoadButton.setDisable(true);
+        hand.removeRoadCards();
+        refreshAfterBuilding();
+    }
+
+    private void refreshAfterBuilding() {
+        enableAffordableBuilderButtons();
+        updateHandText();
     }
 
     private void enableAffordableBuilderButtons() {
