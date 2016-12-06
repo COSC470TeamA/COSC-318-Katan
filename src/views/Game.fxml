@@ -126,7 +126,8 @@
                                <Button fx:id="startGameButton" mnemonicParsing="false" text="Start Game" GridPane.rowIndex="1" />
                                <Label fx:id="turnLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Button fx:id="endTurnButton" layoutX="10.0" layoutY="42.0" mnemonicParsing="false" text="End Turn" GridPane.rowIndex="2" />
-                              <Button fx:id="buildHouseButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build House" GridPane.rowIndex="3"/>
+                               <Button fx:id="buildHouseButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build House" GridPane.rowIndex="3"/>
+                               <Button fx:id="buildRoadButton" layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="Build Road" GridPane.rowIndex="4"/>
                            </children>
                         </GridPane>
                      </children>

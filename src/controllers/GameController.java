@@ -491,7 +491,8 @@ public class GameController implements Initializable {
             RollMarker rollMarker = getRollMarker(tile.getLogicalCoordinate());
             Resource resource = getResource(tile.getLogicalCoordinate());
 
-            surroundingTilesMessage += "!" + tile.getLogicalCoordinate().toString() + "^" + rollMarker.getRoll() + "," + resource.name();
+            int tempRollMarker = rollMarker == null ? 0 : rollMarker.getRoll();
+            surroundingTilesMessage += "!" + tile.getLogicalCoordinate().toString() + "^" + tempRollMarker + "," + resource.name();
         }
         sendMessageToServer("dh:" + x + ":" + y + ":" + surroundingTilesMessage);
     }
@@ -637,7 +638,8 @@ public class GameController implements Initializable {
     private void initializeButtons() {
         endTurnButton.setDisable(true);
         rollDiceButton.setDisable(true);
-        //buildHouseButton.setDisable(true); // Enabled for testing
+        buildHouseButton.setDisable(true); // Enabled for testing
+        buildRoadButton.setDisable(true);
         rollDiceButton.setOnMouseClicked((event) -> handleDiceRollMouseClick(event));
         startGameButton.setOnMouseClicked((event) -> handleStartGameButton(event));
         endTurnButton.setOnMouseClicked((event) -> handleEndTurnButton(event));
@@ -677,6 +679,9 @@ public class GameController implements Initializable {
         rollDiceButton.setDisable(true);
         // Turn off the end turn button
         endTurnButton.setDisable(true);
+        // Turn off the builder buttons
+        buildRoadButton.setDisable(true);
+        buildHouseButton.setDisable(true);
     }
 
     private void handleBuildHouseButtonClick(MouseEvent event) {
@@ -684,7 +689,12 @@ public class GameController implements Initializable {
     }
 
     private void handleBuildRoadButtonClick(MouseEvent event) {
+        System.out.println(hand.canAffordRoad());
+    }
 
+    private void enableAffordableBuilderButtons() {
+        buildHouseButton.setDisable(!hand.canAffordHouse());
+        buildRoadButton.setDisable(!hand.canAffordRoad());
     }
 
     public void startTurn() {
@@ -797,10 +807,14 @@ public class GameController implements Initializable {
         switch (receivedMessageArray[0]) {
             case "ir":
                 incrementResource(receivedMessage);
+                // If it's your turn, after getting resources check for building
+                if (isMyTurn) enableAffordableBuilderButtons();
                 break;
             case "rd":
                 //set dice rolled label
                 getRollDiceLabel().setText(receivedMessageArray[1]);
+                // If it's your turn, after the roll dice check for building
+                if (isMyTurn) enableAffordableBuilderButtons();
                 break;
             case "dr":
                 //Add house to game board
