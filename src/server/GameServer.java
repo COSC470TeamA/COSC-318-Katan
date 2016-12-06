@@ -94,23 +94,23 @@ public class GameServer {
     }
 
     private static void initializeGame() {
-        ArrayList<ArrayList<String>> initialMessages = getInitialMessages();
-
-        for(int i = 0; i < 2; i++) {
-            ArrayList<String> messages = initialMessages.get(i);
-
-            for(String string : messages) {
-                string = string + clients.get(i).player.getColor();
-
-                if (string.startsWith("dh")) {
-                    clients.get(i).addHouseToClient(string);
-                }
-
-                for(GameServerThread client : clients) {
-                    client.sendMessage(string);
-                }
-            }
-        }
+//        ArrayList<ArrayList<String>> initialMessages = getInitialMessages();
+//
+//        for(int i = 0; i < 2; i++) {
+//            ArrayList<String> messages = initialMessages.get(i);
+//
+//            for(String string : messages) {
+//                string = string + clients.get(i).player.getColor();
+//
+//                if (string.startsWith("dh")) {
+//                    clients.get(i).addHouseToClient(string);
+//                }
+//
+//                for(GameServerThread client : clients) {
+//                    client.sendMessage(string);
+//                }
+//            }
+//        }
     }
 
     private static ArrayList<ArrayList<String>> getInitialMessages() {

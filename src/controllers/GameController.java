@@ -1,8 +1,10 @@
 package controllers;
 
+import com.sun.tools.javadoc.Start;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -408,8 +410,27 @@ public class GameController implements Initializable {
             selectionCircle2.setRotate(degrees);
             selectionCircle2.setVisible(true);
         }
+
     }
 
+    public void buildHousesWithRobot() {
+        Bounds bounds = boardPane.getBoundsInLocal();
+        Bounds screenBounds = boardPane.localToScreen(bounds);
+        int x = (int) screenBounds.getMinX();
+        int y = (int) screenBounds.getMinY();
+
+        StartingPositions startingPositions = StartingPositions.getInstance();
+
+        Coordinate c = startingPositions.getMouseEvent();
+        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
+        c = startingPositions.getMouseEvent();
+        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
+        c = startingPositions.getMouseEvent();
+        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
+        c = startingPositions.getMouseEvent();
+        StartingPositions.robotClick(c.getX() + BOARD_PADDING_X + x, c.getY() + BOARD_PADDING_Y + y);
+
+    }
     /**
      * Invoked on mouse enter of a game tile.
      * @param event The Mouse Event which invoked this listener.
@@ -447,6 +468,7 @@ public class GameController implements Initializable {
 
     public void handleSelectionCircleMouseClicked(MouseEvent event) {
         //get tiles adjacent to house and send with message
+        System.out.println(event.getX() + " " + event.getY());
         ArrayList<Tile> surroundingTiles = getTilesSurrounding(event.getX(), event.getY());
         String surroundingTilesMessage = "";
         for(Tile tile : surroundingTiles) {
@@ -456,6 +478,33 @@ public class GameController implements Initializable {
             surroundingTilesMessage += "!" + tile.getLogicalCoordinate().toString() + "^" + rollMarker.getRoll() + "," + resource.name();
         }
         sendMessageToServer("dh:" + event.getX() + ":" + event.getY() + ":" + surroundingTilesMessage);
+
+
+    }
+
+    public void buildHouseAt(double x, double y) {
+        //get tiles adjacent to house and send with message
+        ArrayList<Tile> surroundingTiles = getTilesSurrounding(x, y);
+        String surroundingTilesMessage = "";
+        for(Tile tile : surroundingTiles) {
+            RollMarker rollMarker = getRollMarker(tile.getLogicalCoordinate());
+            Resource resource = getResource(tile.getLogicalCoordinate());
+
+            surroundingTilesMessage += "!" + tile.getLogicalCoordinate().toString() + "^" + rollMarker.getRoll() + "," + resource.name();
+        }
+        sendMessageToServer("dh:" + x + ":" + y + ":" + surroundingTilesMessage);
+    }
+    public void buildRoadAt(double x, double y) {
+        sendMessageToServer("dr:" + x + ":" + y + ":" + selectionCircle2.getRotate());
+    }
+    public void buildVerticalRoadAt(double x, double y) {
+        sendMessageToServer("dr:" + x + ":" + y + ":" + 0);
+    }
+    public void buildUpRoadAt(double x, double y) {
+        sendMessageToServer("dr:" + x + ":" + y + ":" + 60);
+    }
+    public void buildDownRoadAt(double x, double y) {
+        sendMessageToServer("dr:" + x + ":" + y + ":" + 120);
     }
 
     private Resource getResource(HexagonCoordinate logicalCoordinate) {
@@ -600,6 +649,10 @@ public class GameController implements Initializable {
     }
 
     private void handleStartGameButton(MouseEvent event) {
+        buildUpRoadAt(107.29, 88.15);
+        buildVerticalRoadAt(259.20, 275.0);
+        buildHouseAt(130.20, 75.0);
+        buildHouseAt(260.20, 249.0);
         sendMessageToServer("sg");
         // Turn off the start game button for the rest of the game
         startGameButton.setDisable(true);
@@ -693,6 +746,14 @@ public class GameController implements Initializable {
     private void initializeGame() {
         startGameButton.setDisable(true);
         //draw first house and road
+        if (!isMyTurn) {
+            // Initialize starting houses for person who
+            // did not hit the start game button
+            buildDownRoadAt(65.25, 237.03);
+            buildDownRoadAt(194.24, 162.44);
+            buildHouseAt(176.20, 149.0);
+            buildHouseAt(88.20, 248.0);
+        }
     }
 
     private void sendMessageToServer(String message) {
