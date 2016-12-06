@@ -83,6 +83,9 @@ public class GameController implements Initializable {
     @FXML
     Label playerLabel;
 
+    @FXML
+    Label gameWinLabel;
+
     /**
      * A list for all the tiles (hexagon shapes) on the board
      */
@@ -130,6 +133,9 @@ public class GameController implements Initializable {
     private static final int DEFAULT_RETRY_INTERVAL = 2000; // in milliseconds
 
     private boolean isMyTurn = false;
+
+    private boolean gameOver = false;
+
     private boolean buildingAHouse = false, buildingARoad = false;
 
     /*
@@ -905,16 +911,48 @@ public class GameController implements Initializable {
                 //start game
                 initializeGame(receivedMessage);
                 break;
+            case "vr":
+                setWin(true);
+                break;
+            case "gw":
+                setWin(false);
             case "et":
                 if (isMyTurn)
                     isMyTurn = false;
                 else
                     startTurn();
                 break;
+            case "":
+                System.out.println("Client received blank message");
+                break;
             default:
                 System.out.println("Message does not match cases");
                 break;
         }
+    }
+
+    private void setWin(boolean youWon) {
+        if (!gameOver) {
+            if (youWon) {
+                gameWinLabel.setText("You Won!");
+            } else {
+                gameWinLabel.setText("You Lost!");
+            }
+
+            gameOver = true;
+
+            disableAllButtons();
+            isMyTurn = false;
+            turnLabel.setText("");
+        }
+    }
+
+    private void disableAllButtons() {
+        buildHouseButton.setDisable(true);
+        buildRoadButton.setDisable(true);
+        endTurnButton.setDisable(true);
+        startGameButton.setDisable(true);
+        rollDiceButton.setDisable(true);
     }
 
 

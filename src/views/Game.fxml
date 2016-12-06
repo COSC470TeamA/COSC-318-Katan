@@ -105,14 +105,16 @@
                         </GridPane>
                      </children>
                   </Pane>
-                  <Pane prefHeight="150.0" prefWidth="526.0">
+                  <Pane prefHeight="169.0" prefWidth="316.0">
                      <children>
+
                         <GridPane layoutX="77.0" prefHeight="180.0" prefWidth="430.0">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="110.0" />
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="120.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="104.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="104.0" />
+
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -134,6 +136,13 @@
                         </GridPane>
                      </children>
                   </Pane>
+                   <Pane prefHeight="169.0" prefWidth="230.0">
+                       <children>
+                           <Label fx:id="gameWinLabel" layoutX="-3.0" prefHeight="66.0" prefWidth="230.0" text="">
+                               <font>
+                                   <Font size="45.0" />
+                               </font></Label>
+                       </children></Pane>
                </children>
             </HBox>
          </children></VBox>
