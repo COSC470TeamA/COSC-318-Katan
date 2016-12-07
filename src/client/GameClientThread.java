@@ -5,6 +5,7 @@ import controllers.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -51,17 +52,17 @@ public class GameClientThread extends Application {
             gameController = loader.getController();
             Stage stage = new Stage();
             stage.setTitle("Katan");
+
             Scene gameScene = new Scene(anchorPane);
+
             stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
             stage.setScene(gameScene);
 
             stage.setResizable(true);
             stage.setAlwaysOnTop(false);
 
-
             gameStage = stage;
-            stage.setAlwaysOnTop(false);
+
             stage.show();
 
         } catch (Exception e) {
