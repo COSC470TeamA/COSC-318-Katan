@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.Double?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="152.0" prefWidth="246.0" stylesheets="@../assets/styles/project.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../assets/styles/project.css" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainMenuController">
    <children>
-      <GridPane prefHeight="90.0" prefWidth="324.0">
+      <GridPane prefHeight="218.0" prefWidth="147.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -22,20 +22,24 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="createGameButton" mnemonicParsing="false" text="Create Game" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-             <Button fx:id="joinGameButton" mnemonicParsing="false" text="Join Game" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-             <Button fx:id="exitButton" mnemonicParsing="false" text="Exit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="createGameButton" mnemonicParsing="false" prefHeight="28.0" prefWidth="227.0" text="Create Game" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+             <Button fx:id="joinGameButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="141.0" text="Join Game" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+             <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="137.0" text="Exit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
-      <Polygon fill="DODGERBLUE" layoutX="57.0" layoutY="105.0" stroke="BLACK" strokeType="INSIDE">
-        <points>
-          <Double fx:value="-50.0" />
-          <Double fx:value="40.0" />
-          <Double fx:value="50.0" />
-          <Double fx:value="40.0" />
-          <Double fx:value="0.0" />
-          <Double fx:value="-60.0" />
-        </points>
-      </Polygon>
+      <Pane layoutX="158.0" layoutY="14.0" prefHeight="372.0" prefWidth="436.0">
+          <Label alignment="TOP_CENTER" prefHeight="36.0" prefWidth="372.0" text="Katan: How to Play">
+            <font>
+               <Font size="25.0" />
+            </font></Label>
+          <Label layoutY="28.0" prefHeight="63.0" prefWidth="422.0" text="1. Press start game, starting roads and settlements will be placed for each player" wrapText="true" />
+          <Label layoutY="85.0" prefHeight="79.0" prefWidth="422.0" text="2. Roll dice, each player will get the cooresponding resource to the tiles adjacent to their settlements when the number on the tile is rolled" wrapText="true" />
+          <Label layoutY="150.0" prefHeight="79.0" prefWidth="422.0" text="3. Build roads or settlements, roads should be placed between settlements" wrapText="true" />
+          <Label layoutY="215.0" prefHeight="63.0" prefWidth="422.0" text="4. Game is over when one player reaches 4 victory points (has 4 settlements on the board)" wrapText="true" />
+          <Label layoutX="14.0" layoutY="295.0" prefHeight="63.0" prefWidth="422.0" text="Note: Only two player gameplay is supported, you may connect any number of clients but game starting and turns will only work for two" wrapText="true">
+            <font>
+               <Font name="System Bold" size="15.0" />
+            </font></Label>
+      </Pane>
    </children>
 </AnchorPane>

@@ -11,7 +11,7 @@ public class Main extends Application {
         // Launch the first client activity.
         Parent root = FXMLLoader.load(getClass().getResource("/views/MainMenu.fxml"));
         primaryStage.setTitle("Katan");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
     }
 
