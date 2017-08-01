@@ -1,4 +1,4 @@
-node('myNode') {
+node('master') {
     // Just some echoes to show the timestamps.
     stage "First echo"
     echo "Hey, look, I'm echoing with a timestamp!"
